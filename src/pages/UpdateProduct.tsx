@@ -9,7 +9,6 @@ import {
   Card,
   Row,
   Col,
-  notification,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
@@ -23,6 +22,7 @@ import { useMutation } from "@tanstack/react-query";
 import { deleteImage,uploadImageApi } from "../services/ImageService";
 import { updateProduct } from "../services/ProductService";
 import { useFetchAuthorization } from "../hooks/useFetchAuthorization";
+import { errorNotification, successNotification } from "../config/notification";
 
 const { Option } = Select;
 
@@ -43,18 +43,12 @@ const UpdateProduct: React.FC = () => {
   const uploadImageMutation = useMutation({
     mutationFn: uploadImageApi,
     onSuccess: (uploadResponse) => {
-        notification.success({
-          message: "Success",
-          description: "Image uploaded successfully",
-        });
+       successNotification("Success", "Image uploaded successfully");
         addedImage(uploadResponse);
     
     },
     onError: () => {
-      notification.error({
-        message: "Error",
-        description: "An error occurred while uploading image",
-      });
+      errorNotification("Error", "An error occurred while uploading image");
     },
   });
 
@@ -63,29 +57,20 @@ const UpdateProduct: React.FC = () => {
     onSuccess: (deleteResponse) => {
       
       if (deleteResponse.success) {
-        notification.success({
-          message: "Success",
-          description: "Image deleted successfully",
-        })
+        successNotification("Success", "Image deleted successfully");
         setImageList(imageList.filter((image) => image.name !== deleteResponse.imageID));
       }
 
     },
     onError: () => {
-      notification.error({
-        message: "Error",
-        description: "An error occurred while deleting image",
-      });
+     errorNotification("Error", "An error occurred while deleting image");
     },
   });
 
   const updateProductMutation = useMutation({
     mutationFn: (product: Product) => updateProduct( product),
     onSuccess: (updatedProduct) => {
-      notification.success({
-        message: "Success",
-        description: "Product updated successfully",
-      });
+      successNotification("Success", "Product updated successfully");
 
       form.setFieldsValue({
         productName: updatedProduct.productName,
@@ -96,10 +81,7 @@ const UpdateProduct: React.FC = () => {
 
     },
     onError: () => {
-      notification.error({
-        message: "Error",
-        description: "An error occurred while updating product",
-      });
+      errorNotification("Error", "An error occurred while updating product");
     },
   });
 

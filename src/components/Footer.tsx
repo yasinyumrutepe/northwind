@@ -1,9 +1,11 @@
-import { Button, Card, Col, Divider, Layout, Row } from "antd";
+import { Button, Col, Divider, Layout, Row } from "antd";
 import {
   RocketOutlined,
   SyncOutlined,
   CustomerServiceOutlined,
-  FacebookOutlined, InstagramOutlined, TwitterOutlined
+  FacebookOutlined,
+  InstagramOutlined,
+  TwitterOutlined,
 } from "@ant-design/icons";
 
 const { Footer } = Layout;

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Card, Avatar, Form, Input, Button, Col, Row, Typography,  notification, Tabs } from "antd";
+import { Card, Avatar, Form, Input, Button, Col, Row, Typography,  Tabs } from "antd";
 import { UserOutlined, MailOutlined, PhoneOutlined, EditOutlined, HomeOutlined } from "@ant-design/icons";
 import { useCustomerDetail } from "../hooks/useFetchCustomers";
 import Loading from "../components/Loading";
 import { Customer } from "../types/Customer";
+import { errorNotification } from "../config/notification";
 
 const { Title } = Typography;
 const { TabPane } = Tabs;
@@ -24,10 +25,7 @@ const ProfilePage: React.FC = () => {
   }
 
   if (isError) {
-    notification.error({
-      message: "Bir hata ile karşılaşıldı",
-      description: "Hata"
-    });
+   errorNotification('An error occurred', 'An error occurred while fetching customer information');
   }
 
   const onFinishPersonalInfo = (values: any) => {

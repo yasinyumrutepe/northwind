@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 
 
 export const useQueryFunc = (qKey:any,qFn:any)=>{
@@ -7,13 +7,18 @@ export const useQueryFunc = (qKey:any,qFn:any)=>{
         queryKey:qKey,
         queryFn:qFn,
         retry:false,
+        refetchOnWindowFocus:false,
+    })
+    return useQueryHook
+}
 
+export const useMutationFunc = (mtFn:any)=>{
+
+    const useMutationHook = useMutation({
+        mutationFn:mtFn,
+        retry:false,
     })
 
-    return useQueryHook
-
+    return useMutationHook
 }
 
-export const useMutationFunc = ()=>{
-
-}

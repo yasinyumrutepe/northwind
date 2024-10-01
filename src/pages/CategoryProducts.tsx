@@ -1,9 +1,10 @@
-import { Row, Col, notification} from 'antd';
+import { Row, Col} from 'antd';
 import { useParams } from 'react-router-dom'; 
 import Loading from '../components/Loading';
 import { Product } from '../types/Product';
 import ProductCard from '../components/ProductCard';
 import { useFetchProductsByCategory } from '../hooks/useFetchProducts';
+import { errorNotification } from '../config/notification';
 
 
 const CategoryProducts = () => {
@@ -15,10 +16,7 @@ const CategoryProducts = () => {
     return <Loading />;
   }
   if (productsByCategoryQuery.isError){
-    notification.error({
-      message:"Hata",
-      description:"hata"
-    })                  
+    errorNotification('An error occurred', 'An error occurred while fetching products');         
   }
             
   if(productsByCategoryQuery.isSuccess){

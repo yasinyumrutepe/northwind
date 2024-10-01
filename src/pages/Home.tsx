@@ -1,10 +1,11 @@
 import React from 'react';
-import {  Row, Col, notification } from 'antd';
+import {  Row, Col } from 'antd';
 import {useFetchProducts} from '../hooks/useFetchProducts';
 import Loading from '../components/Loading';
 import ProductCard from '../components/ProductCard';
 import { Product } from '../types/Product';
 import CarouselComponent from '../components/Carousel';
+import { errorNotification } from '../config/notification';
 
 
 
@@ -14,10 +15,7 @@ const Home: React.FC = () => {
   return <Loading/>
  }
  if (fetchProductQuery.isError){
-  notification.error({
-    message:"Bir hata ile karşılaşıldı",
-    description:"Hata"
-  })
+  errorNotification('Error', 'An error occurred while fetching products');
 }
 
   if(fetchProductQuery.isSuccess){

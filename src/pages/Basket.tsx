@@ -7,7 +7,6 @@ import {
   Col,
   Card,
   Typography,
-  notification,
   Input,
   Divider,
 } from "antd";
@@ -22,6 +21,7 @@ import {
 } from "../services/BasketService";
 import { Campaign } from "../types/Campaign";
 import { createOrder } from "../services/OrderService";
+import { errorNotification, successNotification } from "../config/notification";
 
 const { Title, Text } = Typography;
 
@@ -38,17 +38,11 @@ const Basket: React.FC = () => {
   const deleteBasketMutation = useMutation({
     mutationFn: (id: number) => deleteBasket(id),
     onSuccess: (newBasket) => {
-      notification.success({
-        message: "Success",
-        description: "Product removed from cart",
-      });
+      successNotification("Success", "Item removed from cart");
       setBasketItems(newBasket);
     },
     onError: () => {
-      notification.error({
-        message: "Error",
-        description: "An error occurred while removing from cart",
-      });
+      errorNotification("Error", "An error occurred while removing item from cart");
     },
   });
 
@@ -57,16 +51,10 @@ const Basket: React.FC = () => {
       updateQuantity(updateQuantityData),
     onSuccess: (newBasket) => {
       setBasketItems(newBasket);
-      notification.success({
-        message: "Success",
-        description: "Quantity updated",
-      });
+      successNotification("Success", "Quantity updated");
     },
     onError: () => {
-      notification.error({
-        message: "Error",
-        description: "An error occurred while updating quantity",
-      });
+      errorNotification("Error", "An error occurred while updating quantity");
     },
   });
 
@@ -85,28 +73,17 @@ const Basket: React.FC = () => {
     },
 
     onError: () => {
-      notification.error({
-        message: "Error",
-        description: "An error occurred while finding campaign",
-      });
+      errorNotification("Error", "An error occurred while applying discount");
     },
   });
 
   const addOrderMutation = useMutation({
     mutationFn: () => createOrder(),
     onSuccess: () => {
-      notification.success({
-        message: "Success",
-        description: "Order added",
-      });
-      
-
+      successNotification("Success", "Order added successfully");
     },
     onError: () => {
-      notification.error({
-        message: "Error",
-        description: "An error occurred while adding order",
-      });
+      errorNotification("Error", "An error occurred while adding order");
     },
   });
 
@@ -120,7 +97,7 @@ const Basket: React.FC = () => {
 
       setBasketItems(basketQuery.data);
     }
-  }, [basketQuery.isSuccess, basketQuery.data]);
+  }, [basketQuery.isSuccess, basketQuery.data,setBasketItems]);
 
   const applyDiscount = () => {
     addCampaignMutation.mutate(discountCode);
@@ -241,7 +218,12 @@ const Basket: React.FC = () => {
           <Divider />
           <Title level={4}>Total: {basketItems?.totalPrice} ₺</Title>
           <Divider />
-          <Button type="primary" block style={{ marginTop: 10 }} onClick={addOrder}>
+          <Button
+            type="primary"
+            block
+            style={{ marginTop: 10 }}
+            onClick={addOrder}
+          >
             Buy
           </Button>
         </Card>
