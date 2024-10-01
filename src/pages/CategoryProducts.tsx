@@ -1,31 +1,31 @@
 import { Row, Col, notification} from 'antd';
 import { useParams } from 'react-router-dom'; 
 import Loading from '../components/Loading';
-import { useFetchCategory } from '../hooks/useFetchCategories';
 import { Product } from '../types/Product';
 import ProductCard from '../components/ProductCard';
+import { useFetchProductsByCategory } from '../hooks/useFetchProducts';
 
 
 const CategoryProducts = () => {
     const { categoryid } = useParams();
     const categoryID = Number(categoryid);
     
-  const categoryQuery =  useFetchCategory(categoryID)
-  if (categoryQuery.isPending){
+  const productsByCategoryQuery =  useFetchProductsByCategory({categoryID:categoryID, page:1, limit:30});
+  if (productsByCategoryQuery.isPending){
     return <Loading />;
   }
-  if (categoryQuery.isError){
+  if (productsByCategoryQuery.isError){
     notification.error({
       message:"Hata",
       description:"hata"
     })                  
   }
             
-  if(categoryQuery.isSuccess){
+  if(productsByCategoryQuery.isSuccess){
       return (                                                      
         <div style={{ padding: '20px' }}>
       <Row gutter={[16, 16]}>
-        {categoryQuery.data?.products.map((product:Product) => (
+        {productsByCategoryQuery.data?.data?.map((product:Product) => (
           <Col key={product.productID} xs={24} sm={12} md={6} lg={4}>
               <ProductCard product={product } imgPath={'https://random.imagecdn.app/300/200'}/>
           </Col>

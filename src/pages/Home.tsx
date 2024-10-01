@@ -4,6 +4,7 @@ import {useFetchProducts} from '../hooks/useFetchProducts';
 import Loading from '../components/Loading';
 import ProductCard from '../components/ProductCard';
 import { Product } from '../types/Product';
+import CarouselComponent from '../components/Carousel';
 
 
 
@@ -24,9 +25,12 @@ const Home: React.FC = () => {
       <div   style={{ padding: '20px' }}>
 
       <Row gutter={[24, 24]}>
+        <Col>
+           <CarouselComponent />
+        </Col>
         {fetchProductQuery.data?.data.map((product: Product) => (
           <Col key={product.productID} xs={24} sm={12} md={8} lg={6}>
-              <ProductCard product={product} imgPath={'https://random.imagecdn.app/300/200'}/>
+              <ProductCard product={product} imgPath={'error'}/>
           </Col>
         ))}
       </Row>

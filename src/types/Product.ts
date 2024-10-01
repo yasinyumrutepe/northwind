@@ -6,6 +6,22 @@ export type Product = {
    unitPrice : number;
    quantityPerUnit : string;
    category? : Category;
+   description? : string;
+   productImages? : ProductImage[];
+};
+
+export type GetProductsByCategoryRequest = {
+   categoryID : number;
+   page : number;
+   limit : number;
+};
+
+
+export type ProductImage = {
+   productImageID : number;
+   productID : number;
+   imagePublicID : string;
+   imagePath : string;
 };
 
 export type CreateProduct = {
@@ -13,14 +29,35 @@ export type CreateProduct = {
    categoryID : number;
    unitPrice : number;
    quantityPerUnit : string;
+   description : string;
 };
 
 
 export type BasketRequest = {
    basketID : string;
-   productID : number;
-   quantity : number;
+   items : BasketItem[];
+   totalPrice : number;
 };
+
+export type BasketItem = {
+   productID : number;
+   productName : string;
+   categoryID : number;
+   categoryName : string;
+   unitPrice : number;
+   quantity : number;
+   totalPrice : number;
+   images : ProductImage[];
+   discount : number;
+
+};
+export type UpdateQuantityType = {
+   productID: number;
+   quantity: number;
+ };
+
+
+
 
 export type BasketResponse = {
    product : BasketProduct[];
@@ -34,10 +71,7 @@ export type BasketProduct = {
 };
 
 
-export type BasketItem = {
-   basketID : number;
-   basketData: BasketData[];
-};
+
 
 export type BasketData = {
    productID : number;

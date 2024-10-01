@@ -12,6 +12,9 @@ import Orders from "../pages/Orders"
 import Basket from "../pages/Basket"
 import ProfilePage from "../pages/Profile"
 import ProductDetail from "../pages/ProductDetail"
+import UpdateProduct from "../pages/UpdateProduct"
+import AddCampaign from "../pages/AddCampaign"
+import Authorization from "../pages/Authorization"
 
 
 export const AppRouter :React.FC = () => {
@@ -27,6 +30,8 @@ export const AppRouter :React.FC = () => {
         <Route path="/product/add" element={<AddProduct/>}/>
         <Route path= "/products/:categoryid" element={<CategoryProducts/>}/>
         <Route path= "/product/:productid" element={<ProductDetail/>}/>
+        <Route path= "/product/update/:productid" element={<UpdateProduct/>}/>
+        <Route path= "/campaigns" element={<AddCampaign/>}/>
         <Route path= "/orders" element={<Orders/>}/>
         <Route path="/basket" element= {<Basket/>}/>
         <Route path="/profile" element={<ProfilePage/>}/>
@@ -35,6 +40,7 @@ export const AppRouter :React.FC = () => {
           
         </Route>
            <Route path="*" element={<NotFoundPage/>}/>
+           <Route path="/authorization" element={<Authorization/>}/>
          </Routes>
     </BrowserRouter>
     )

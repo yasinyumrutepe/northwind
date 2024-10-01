@@ -1,51 +1,48 @@
-import React from 'react';
-import { Layout, Menu, Button, notification, Popover, Dropdown } from 'antd';
-import { LogoutOutlined,UserOutlined } from '@ant-design/icons';
+import React, { useEffect } from 'react';
+import { Layout, Menu, Button, notification, Popover, Dropdown, Row, Col } from 'antd';
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { useFetchCategories } from '../hooks/useFetchCategories';
 import { Category } from '../types/Category';
 import { useRecoilState } from 'recoil';
 import { categoryState } from '../state/CategoryState';
-import Loading from './Loading';
+
 
 const { Header } = Layout;
 
-const Navbar: React.FC = () => {
-
+const NavbarComp: React.FC = () => {
   const [category, setCategory] = useRecoilState(categoryState);
-
   const fetchCategoryQuery = useFetchCategories();
-  if (fetchCategoryQuery.isFetching && category.length === 0) {
-    return <Loading />;
-  }
+
+  useEffect(() => {
+    if (category.length === 0 && fetchCategoryQuery.isSuccess) {
+      setCategory(fetchCategoryQuery.data.data);
+    }
+  }, [category, fetchCategoryQuery.isSuccess, fetchCategoryQuery.data?.data, setCategory]);
+
   if (fetchCategoryQuery.isError) {
     notification.error({
       message: 'Bir hata ile karşılaşıldı',
       description: 'Hata',
     });
   }
-  if (category.length === 0 && fetchCategoryQuery.isSuccess) {
-    setCategory(fetchCategoryQuery.data.data);
-  }
+
   const isMobile = window.innerWidth < 768;
   const menu = (
-    <Menu mode={isMobile ? "vertical" : "horizontal"} style={{ width: isMobile ? '100%' : 'auto' }}>
+    <Menu mode={isMobile ? 'vertical' : 'horizontal'} style={{ width: isMobile ? '100%' : 'auto' }}>
       <Menu.Item key="profile">
         <a href="/profile">Profile</a>
       </Menu.Item>
-       <Menu.Item key="basket">
-        <a href="/basket">
-         Basket
-        </a>
-        </Menu.Item>
+      <Menu.Item key="basket">
+        <a href="/basket">Basket</a>
+      </Menu.Item>
       <Menu.Item key="orders">
         <a href="/orders">Orders</a>
       </Menu.Item>
       <Menu.Item key="logout">
         <Popover content="Logout">
-          <a onClick={()=>logout()}>
+          <a onClick={() => logout()}>
             <LogoutOutlined /> Logout
           </a>
-       
         </Popover>
       </Menu.Item>
     </Menu>
@@ -54,22 +51,14 @@ const Navbar: React.FC = () => {
   const checkAuth = () => {
     if (localStorage.getItem('authToken')) {
       return (
-        <>
-      <Menu.Item key="userProfile">
-      <Dropdown overlay={menu}  trigger={['click']}>
-        <Button
-          shape="circle"
-          icon={<UserOutlined />}
-        />
-      </Dropdown>
-      </Menu.Item>
-      
-     
-        </>
+        <Menu.Item key="userProfile">
+          <Dropdown overlay={menu} trigger={['click']}>
+            <Button shape="circle" icon={<UserOutlined />} />
+          </Dropdown>
+        </Menu.Item>
       );
     }
-   
-  } 
+  };
 
   const logout = () => {
     localStorage.removeItem('authToken');
@@ -86,21 +75,32 @@ const Navbar: React.FC = () => {
         background: '#fff',
       }}
     >
-      <div className="logo" />
-      <Menu theme="light" mode="horizontal" style={{ flex: 1, display: 'flex', alignItems: 'center'  }}>
+      <Row style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+      <Col xs={24} sm={12} md={8}>
+      <Menu theme="light" mode="horizontal" style={{ display: 'flex', alignItems: 'center', fontSize: '12px' }}>
         {category.map((category: Category) => (
           <Menu.Item key={category.categoryID}>
             <a href={`/products/${category.categoryID}`}>{category.categoryName}</a>
           </Menu.Item>
         ))}
-       
       </Menu>
-      <Menu theme="light" mode="horizontal" style={{  display: 'flex', alignItems: 'center' ,justifyContent: 'space-between'  }}>
-      {checkAuth()}
-      </Menu>
-     
+      </Col>
+      <Col xs={24} sm={12} md={8} style={{ textAlign: 'center' }}>
+      <div style={{ textAlign: 'center', flexGrow: 1 }}>
+        <a href="/">
+        <img src="/assets/logo.svg" alt="Logo" style={{ height: '40px' }}  />
+        </a>
+      </div>
+      </Col>
+      <Col xs={24} sm={12} md={8} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+  <Menu theme="light" mode="horizontal" style={{ display: 'flex', alignItems: 'center' }}>
+    {checkAuth()}
+  </Menu>
+</Col>
+    </Row>
+      
     </Header>
   );
 };
 
-export default Navbar;
+export default NavbarComp;

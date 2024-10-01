@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchAllProducts, fetchProduct } from "../services/ProductService";
+import { fetchAllProducts, fetchProduct, fetchProductsByCategory } from "../services/ProductService";
+import { GetProductsByCategoryRequest } from "../types/Product";
 
 
 
@@ -22,4 +23,14 @@ export const useFetchProduct = (id:number)=>{
     });
    return productDetailQuery
    
+}
+
+
+export const useFetchProductsByCategory = (request:GetProductsByCategoryRequest)=>{
+  const productsByCategory = useQuery({
+    queryKey: ['products',request],
+    queryFn: () => fetchProductsByCategory(request),
+    retry:false
+  });
+  return productsByCategory
 }

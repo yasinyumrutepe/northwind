@@ -1,23 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { Form, Input, Button, notification, Select, Upload, Row, Col, Typography } from 'antd';
 import { createProduct } from '../services/ProductService';
-import { CreateProduct } from '../types/Product';
 import { UploadOutlined } from '@ant-design/icons';
 import { useRecoilValue } from 'recoil';
 import { categoryState } from '../state/CategoryState';
+import { useFetchAuthorization } from '../hooks/useFetchAuthorization';
+import Loading from '../components/Loading';
 
 const { Title } = Typography;
 const { Option } = Select;
 
 const AddProduct: React.FC = () => {
   const categories = useRecoilValue(categoryState);
-
+  const [fileList, setFileList] = useState<any[]>([]); // Resimleri tutmak için state
 
   const addProductMutation = useMutation({
     mutationFn: createProduct,
     onSuccess: (newProduct) => {
-    
       notification.success({
         message: 'Product Added Successfully!',
         description: `${newProduct.productName} has been added.`,
@@ -30,26 +30,39 @@ const AddProduct: React.FC = () => {
       });
     },
   });
+  const isAuthorized = useFetchAuthorization();
+  if (isAuthorized.isLoading) {
+    return <Loading />;
+  }
 
-  const onFinish = (values: any) => {
-    const product: CreateProduct = {
-      productName: values.productName,
-      categoryID: parseInt(values.category, 10), // Convert category to int
-      unitPrice: parseFloat(values.unitPrice), // Convert unitPrice to float
-      quantityPerUnit: values.quantityPerUnit,
-   
-    };
-
-    addProductMutation.mutate(product); // Perform product addition
+  const handleUploadChange = ({ fileList }: any) => {
+    setFileList(fileList);
   };
 
+  const onFinish = (values: any) => {
+    const formData = new FormData();
+    formData.append('productName', values.productName);
+    formData.append('categoryID', values.category);
+    formData.append('unitPrice', values.unitPrice);
+    formData.append('quantityPerUnit', values.quantityPerUnit);
+    formData.append('description', values.description);
+  
+    // Resim dosyalarını formData'ya ekle
+    fileList.forEach((file) => {
+      formData.append('images', file.originFileObj); 
+    });
+  
+    addProductMutation.mutate(formData); 
+  };
+  
+
   return (
-    <div>
+    <div style={{ padding: '20px' }}>
       <Title level={4}>Add Product</Title>
       <Form
         layout="vertical"
         onFinish={onFinish}
-        style={{ maxWidth: 800, margin: '0 auto' }}
+        style={{ maxWidth: '100%', margin: '0' }}
       >
         <Row gutter={16}>
           <Col span={8}>
@@ -60,9 +73,10 @@ const AddProduct: React.FC = () => {
               getValueFromEvent={(e) => e.fileList}
             >
               <Upload
-                listType="picture"
-                beforeUpload={() => false} // Prevent automatic upload
-                showUploadList={true}
+                listType="picture-card"
+                beforeUpload={() => false} 
+                fileList={fileList} 
+                onChange={handleUploadChange} 
                 accept="image/*"
               >
                 <Button icon={<UploadOutlined />}>Upload Images</Button>
@@ -117,7 +131,7 @@ const AddProduct: React.FC = () => {
             </Form.Item>
 
             <Form.Item>
-              <Button type="primary" htmlType="submit" >
+              <Button type="primary" htmlType="submit">
                 Add Product
               </Button>
             </Form.Item>

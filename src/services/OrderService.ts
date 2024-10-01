@@ -1,5 +1,4 @@
 import api from '../api/api';
-import { CreateOrder } from '../types/Order';
 
 export const fetchAllOrders = async (page?:number,limit?:number) => {
 
@@ -28,8 +27,8 @@ export const fetchOrder = async (id:Number) => {
     return response.data;
 }
 
-export const createOrder = async (order:CreateOrder) => {
-    const response = await api.post('/Order', order);
+export const createOrder = async () => {
+    const response = await api.post('/Order');
     return response.data;
 }
 

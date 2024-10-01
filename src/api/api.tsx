@@ -1,4 +1,4 @@
-
+                                                           
 
 import axios from 'axios';
 
@@ -8,7 +8,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-  
+
   },
 });
 
@@ -39,7 +39,8 @@ api.interceptors.response.use(
 
     if (error.response && error.response.status === 401) {
    
-      console.error('Yetkisiz giriş. Kullanıcı çıkış yapacak.');
+    
+      window.location.href = '/authorization';
      
     }
     return Promise.reject(error);

@@ -1,117 +1,247 @@
 import React, { useState, useEffect } from "react";
-import { List, Button, InputNumber, Row, Col, Card, Typography } from "antd";
+import {
+  List,
+  Button,
+  InputNumber,
+  Row,
+  Col,
+  Card,
+  Typography,
+  notification,
+  Input,
+  Divider,
+} from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
-import { BasketResponse } from "../types/Product"; 
-import { useQuery } from "@tanstack/react-query";
-import { fetchAllBaskets } from "../services/BasketService";
+import { BasketRequest, UpdateQuantityType } from "../types/Product";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  addCampaign,
+  deleteBasket,
+  fetchAllBaskets,
+  updateQuantity,
+} from "../services/BasketService";
+import { Campaign } from "../types/Campaign";
+import { createOrder } from "../services/OrderService";
 
-const { Title } = Typography;
-
-
+const { Title, Text } = Typography;
 
 const Basket: React.FC = () => {
-  const [basketItems, setBasketItems] = useState<BasketResponse>() ?? [];
+  const [basketItems, setBasketItems] = useState<BasketRequest>() ?? [];
+  const [discountCode, setDiscountCode] = useState<string>("");
+  const [campaign, setCampaign] = useState<Campaign>() ?? null;
 
   const basketQuery = useQuery({
     queryKey: ["basket"],
-    queryFn: () =>fetchAllBaskets(),
+    queryFn: () => fetchAllBaskets(),
+  });
+
+  const deleteBasketMutation = useMutation({
+    mutationFn: (id: number) => deleteBasket(id),
+    onSuccess: (newBasket) => {
+      notification.success({
+        message: "Success",
+        description: "Product removed from cart",
+      });
+      setBasketItems(newBasket);
+    },
+    onError: () => {
+      notification.error({
+        message: "Error",
+        description: "An error occurred while removing from cart",
+      });
+    },
+  });
+
+  const updateQuantityMutation = useMutation({
+    mutationFn: (updateQuantityData: UpdateQuantityType) =>
+      updateQuantity(updateQuantityData),
+    onSuccess: (newBasket) => {
+      setBasketItems(newBasket);
+      notification.success({
+        message: "Success",
+        description: "Quantity updated",
+      });
+    },
+    onError: () => {
+      notification.error({
+        message: "Error",
+        description: "An error occurred while updating quantity",
+      });
+    },
+  });
+
+  const addCampaignMutation = useMutation({
+    mutationFn: (campaignName: string) => addCampaign(campaignName),
+    onSuccess: (basket) => {
+      console.log("Campaign found:", basket);
+      setBasketItems(basket);
+      if (basket.discount == null) {
+        setDiscountCode("");
+        setCampaign({ campaignName: "", discountAmount: 0, isPercent: false });
+      } else {
+        setDiscountCode(basket.discount.campaignName);
+        setCampaign(basket.discount);
+      }
+    },
+
+    onError: () => {
+      notification.error({
+        message: "Error",
+        description: "An error occurred while finding campaign",
+      });
+    },
+  });
+
+  const addOrderMutation = useMutation({
+    mutationFn: () => createOrder(),
+    onSuccess: () => {
+      notification.success({
+        message: "Success",
+        description: "Order added",
+      });
+      
+
+    },
+    onError: () => {
+      notification.error({
+        message: "Error",
+        description: "An error occurred while adding order",
+      });
+    },
   });
 
   useEffect(() => {
     if (basketQuery.isSuccess) {
+      if (basketQuery.data.discount == null) {
+        setDiscountCode("");
+      } else {
+        setDiscountCode(basketQuery.data.discount.campaignName);
+      }
+
       setBasketItems(basketQuery.data);
     }
-  }, [basketQuery.data, basketQuery.isSuccess]);
+  }, [basketQuery.isSuccess, basketQuery.data]);
 
-
-
+  const applyDiscount = () => {
+    addCampaignMutation.mutate(discountCode);
+  };
 
   const handleQuantityChange = (id: number, value: number | null) => {
-    // const updatedBasket = basketItems.basketData.map((item) =>
-    //   item.basketData.productID === id && value !== null
-    //     ? {
-    //         ...item,
-    //         quantity: value,
-    //         totalPrice: value * item.product.unitPrice,
-    //       }
-    //     : item
-    // );
-    // setBasketItems(updatedBasket);
-    // saveBasketToStorage(updatedBasket);
+    updateQuantityMutation.mutate({ productID: id, quantity: value ?? 1 });
   };
 
   const handleRemove = (id: number) => {
-    // const updatedBasket = basketItems.filter((item) => item.product.productID !== id);
-    // setBasketItems(updatedBasket);
-    // saveBasketToStorage(updatedBasket);
+    console.log("Removing item with ID:", id);
+    deleteBasketMutation.mutate(id);
   };
 
-  // const totalBasketPrice = basketItems.reduce(
-  //   (total, item) => total + item.totalPrice,
-  //   0
-  // );
+  const addOrder = () => {
+    addOrderMutation.mutate();
+  };
 
-  // const handleBuy = () => {
-  //   const token = localStorage.getItem("authToken");
-
-  //   const orderDetail :OrderDetail[] = basketItems?.basketData.map((item) => {
-  //     return {
-  //       productID: item.productID,
-  //       unitPrice: item.unitPrice,
-  //       quantity: item.quantity,
-  //       discount: 0,
-  //     };
-  //   });
-
-  //   const sendOrder :CreateOrder ={
-  //     token: token ? token : "",
-  //     orderDetails: orderDetail,
-  //     orderDate: new Date(),
-  //   };
-  //   // addOrderMutation.mutate(sendOrder);
-   
-  // }
   return (
     <Row gutter={[16, 16]} style={{ padding: "20px" }}>
       <Col span={16}>
         <Card title="Your Basket" bordered={false}>
-          <List
-            itemLayout="horizontal"
-            dataSource={basketItems?.product}
-            renderItem={(item) => (
-              <List.Item
-                actions={[
-                  <InputNumber
-                    min={1}
-                    value={item.quantity}
-                    onChange={(value) => handleQuantityChange(item.product.productID, value)}
-                  />,
-                  <Button
-                    type="primary"
-                    danger
-                    icon={<DeleteOutlined />}
-                    onClick={() => handleRemove(item.product.productID)}
-                  >
-                    Sil
-                  </Button>,
-                ]}
-              >
-                <List.Item.Meta
-                  avatar={<img src="https://random.imagecdn.app/200/100" alt={item.product.productName} />}
-                  title={item.product.productName}
-                  description={`Birim Fiyatı: ${item.product.unitPrice} ₺`}
-                />
-                <div>{item.quantity * item.product.unitPrice} ₺</div>
-              </List.Item>
-            )}
-          />
+          {basketItems?.items?.map((item) => (
+            <Card key={item.productID} style={{ marginBottom: "16px" }}>
+              <Row align="middle">
+                <Col span={8}>
+                  <img
+                    src={item.images[0]?.imagePath ?? ""}
+                    alt={item.productName}
+                    style={{
+                      width: "100%",
+                      maxHeight: "200px",
+                      objectFit: "cover",
+                    }}
+                  />
+                </Col>
+                <Col span={8} offset={8} style={{ paddingLeft: "16px" }}>
+                  <Card.Meta
+                    title={item.productName}
+                    description={`Birim Fiyatı: ${item.unitPrice} ₺`}
+                  />
+                  <div style={{ marginTop: 10 }}>
+                    <InputNumber
+                      min={1}
+                      value={item.quantity}
+                      onChange={(value) =>
+                        handleQuantityChange(item.productID, value)
+                      }
+                      style={{ marginRight: 8 }}
+                    />
+                    <Button
+                      type="primary"
+                      danger
+                      icon={<DeleteOutlined />}
+                      onClick={() => handleRemove(item.productID)}
+                    >
+                      Sil
+                    </Button>
+                  </div>
+                  <Text strong style={{ marginTop: 10 }}>
+                    Toplam: {item.totalPrice} ₺
+                  </Text>
+                </Col>
+              </Row>
+            </Card>
+          ))}
         </Card>
       </Col>
 
       <Col span={8}>
-        <Card title="Order" bordered={false}>
+        <Card title="Order Summary" bordered={false}>
+          <div style={{ marginBottom: 10 }}>
+            <List
+              bordered
+              dataSource={basketItems?.items}
+              renderItem={(item) => (
+                <List.Item>
+                  <Typography.Text>{item.productName}</Typography.Text>
+                  <Typography.Text style={{ marginLeft: "auto" }}>
+                    {item.quantity} pcs{" "}
+                  </Typography.Text>
+                  <Typography.Text style={{ marginLeft: "16px" }}>
+                    {item.unitPrice * item.quantity} ₺
+                  </Typography.Text>
+                </List.Item>
+              )}
+            />
+          </div>
+          <Divider />
+          <Row gutter={8} style={{ marginBottom: 10 }}>
+            <Col span={16}>
+              <Input
+                placeholder="Promo Code"
+                value={discountCode}
+                onChange={(e) => setDiscountCode(e.target.value)}
+              />
+            </Col>
+            <Col span={8}>
+              <Button type="primary" block onClick={applyDiscount}>
+                Apply
+              </Button>
+            </Col>
+          </Row>
+
+          {campaign?.discountAmount ? (
+            <>
+              <Divider />
+              <Title level={5}>
+                Discount:{" "}
+                {campaign?.isPercent
+                  ? "%" + campaign.discountAmount
+                  : campaign?.discountAmount + "₺"}
+              </Title>
+            </>
+          ) : (
+            <></>
+          )}
+          <Divider />
           <Title level={4}>Total: {basketItems?.totalPrice} ₺</Title>
-          <Button type="primary" block >
+          <Divider />
+          <Button type="primary" block style={{ marginTop: 10 }} onClick={addOrder}>
             Buy
           </Button>
         </Card>

@@ -1,6 +1,8 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "../components/Navigation";
+import NavbarComp from "../components/Navigation";
 import { Layout } from "antd";
+import FooterComp from "../components/Footer";
+
 
 
 const PrivateRoute=()=>{
@@ -13,10 +15,13 @@ const PrivateRoute=()=>{
 
 
     return (
-        <Layout >
-       <Navbar/>
+      <Layout>
+       <NavbarComp/>
        <Outlet/>
-        </Layout>
+         <FooterComp  />
+      </Layout>
+      
+      
        
 
     )
