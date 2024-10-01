@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {  Image, Row, Col, Typography, Button, Divider, notification } from 'antd';
+import {  Image, Row, Col, Typography, Button, Divider } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 
 import { BasketRequest, Product } from "../types/Product";
@@ -11,6 +11,7 @@ import { categoryState } from "../state/CategoryState";
 import uuid from "react-uuid";
 import { useMutation } from "@tanstack/react-query";
 import { addBasketService } from "../services/BasketService";
+import { errorNotification, successNotification } from "../config/notification";
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -24,16 +25,10 @@ const ProductDetail: React.FC = () => {
   const addBasketMutation = useMutation({
     mutationFn: addBasketService,
     onSuccess: () => {
-      notification.success({
-        message: "Success",
-        description: `${product?.productName} added to cart`,
-      });
+      successNotification("Success", "Product added to cart successfully");
     },
     onError: () => {
-      notification.error({
-        message: "Error",
-        description: "An error occurred while adding to cart",
-      });
+     errorNotification("Error", "An error occurred while adding the product to cart");
     },
   });
   useEffect(() => {
@@ -56,10 +51,7 @@ const ProductDetail: React.FC = () => {
   }
 
   if (productDetail.isError) {
-    notification.error({
-      message: "Error",
-      description: "An error occurred while fetching product",
-    });
+   errorNotification("Error", "An error occurred while fetching product details");
     return null;
   }
 

@@ -1,24 +1,19 @@
 import React from 'react';
-import { Form, Input, Button, Checkbox, Card, notification } from 'antd';
+import { Form, Input, Button, Checkbox, Card } from 'antd';
 import { useMutation } from '@tanstack/react-query';
 import { fetchRegister } from '../services/AuthService'; // Kayıt servisini burada kullanacaksınız
 import { RegisterRequest } from '../types/Auth';
+import { errorNotification, successNotification } from '../config/notification';
 
 const Register: React.FC = () => {
 
     const registerMutation = useMutation({
       mutationFn: fetchRegister,
       onSuccess: () => {
-        notification.success({
-          message:'Kayıt işlemi başarılı',
-          description:'Giriş sayfasına yönlendiriliyorsunuz'
-        });
+        successNotification('Kayıt işlemi başarılı!', 'Başarıyla kayıt oldunuz.');
       },
       onError: () => {
-        notification.error({
-          message: 'Kayıt işlemi başarısız!',
-          description: 'Bilgilerinizi kontrol edin ve tekrar deneyin.',
-        });
+        errorNotification('Kayıt işlemi başarısız!', 'Bir hata oluştu.');
       },
     });
 

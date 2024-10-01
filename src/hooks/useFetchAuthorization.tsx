@@ -1,12 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
 import { isAuthorized } from "../services/Authorization";
+import { useQueryFunc } from "../config/query";
+
 
 export const useFetchAuthorization = () =>{
-    const authorized = useQuery({
-        queryKey: ['authorized'],
-        queryFn: () => isAuthorized(),
-        retry:false
-      },
-    );
-    return authorized
+  const authorized = useQueryFunc(['authorized'],isAuthorized)
+  return authorized
 }

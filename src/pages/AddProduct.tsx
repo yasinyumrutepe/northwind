@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { Form, Input, Button, notification, Select, Upload, Row, Col, Typography } from 'antd';
+import { Form, Input, Button, Select, Upload, Row, Col, Typography } from 'antd';
 import { createProduct } from '../services/ProductService';
 import { UploadOutlined } from '@ant-design/icons';
 import { useRecoilValue } from 'recoil';
 import { categoryState } from '../state/CategoryState';
 import { useFetchAuthorization } from '../hooks/useFetchAuthorization';
 import Loading from '../components/Loading';
+import { errorNotification, successNotification } from '../config/notification';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -18,16 +19,10 @@ const AddProduct: React.FC = () => {
   const addProductMutation = useMutation({
     mutationFn: createProduct,
     onSuccess: (newProduct) => {
-      notification.success({
-        message: 'Product Added Successfully!',
-        description: `${newProduct.productName} has been added.`,
-      });
+      successNotification('Product Added', `Product ${newProduct.productName} has been added!`);
     },
     onError: () => {
-      notification.error({
-        message: 'Failed to Add Product!',
-        description: 'An error occurred. Please try again.',
-      });
+     errorNotification('An error occurred', 'An error occurred while adding the product');
     },
   });
   const isAuthorized = useFetchAuthorization();
@@ -46,8 +41,6 @@ const AddProduct: React.FC = () => {
     formData.append('unitPrice', values.unitPrice);
     formData.append('quantityPerUnit', values.quantityPerUnit);
     formData.append('description', values.description);
-  
-    // Resim dosyalarını formData'ya ekle
     fileList.forEach((file) => {
       formData.append('images', file.originFileObj); 
     });

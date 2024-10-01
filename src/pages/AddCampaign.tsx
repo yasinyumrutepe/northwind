@@ -7,11 +7,11 @@ import {
   Switch,
   Card,
   Typography,
-  notification,
 } from "antd";
 import { addCampaign } from "../services/CampaignService";
 import { Campaign } from "../types/Campaign";
 import { useMutation } from "@tanstack/react-query";
+import { errorNotification, successNotification } from "../config/notification";
 
 const { Title } = Typography;
 
@@ -22,22 +22,22 @@ const AddCampaign: React.FC = () => {
   const addCampaignMutation = useMutation({
     mutationFn: (campaign: Campaign) => addCampaign(campaign),
     onSuccess: () => {
-      notification.success({
-        message: "Success",
-        description: "Campaign added successfully",
-      });
+      successNotification(
+        "Campaign Added",
+        "Campaign has been added successfully"
+      );
       form.resetFields();
     },
     onError: () => {
-      notification.error({
-        message: "Error",
-        description: "An error occurred while adding campaign",
-      });
+      errorNotification(
+        "An error occurred",
+        "An error occurred while adding the campaign"
+      );
     },
   });
 
   const onFinish = (values: any) => {
-    var campaing:Campaign = {
+    var campaing: Campaign = {
       campaignName: values.campaignName,
       discountAmount: values.discountAmount,
       isPercent: isPercentage,
