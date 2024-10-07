@@ -33,12 +33,25 @@ const NavbarComp: React.FC = () => {
     );
   }
 
+  const checkAdmin = () => {
+    if (localStorage.getItem("authToken")) {
+        
+
+
+      return (
+        <Menu.Item key="admin">
+          <Link to="/admin">Admin</Link>
+        </Menu.Item>
+      );
+    }
+  }
   const isMobile = window.innerWidth < 768;
   const menu = (
     <Menu
       mode={isMobile ? "vertical" : "horizontal"}
       style={{ width: isMobile ? "100%" : "auto" }}
     >
+
       <Menu.Item key="profile">
         <Link to="/profile">Profile</Link>
       </Menu.Item>
@@ -48,6 +61,7 @@ const NavbarComp: React.FC = () => {
       <Menu.Item key="orders">
         <Link to="/orders">Orders</Link>
       </Menu.Item>
+      {checkAdmin()}
       <Menu.Item key="logout">
         <Popover content="Logout">
           <button
@@ -72,6 +86,8 @@ const NavbarComp: React.FC = () => {
       );
     }
   };
+
+
 
   const logout = () => {
     localStorage.removeItem("authToken");
@@ -115,6 +131,7 @@ const NavbarComp: React.FC = () => {
             </Link>
           </div>
         </Col>
+      
         <Col
           xs={24}
           sm={12}

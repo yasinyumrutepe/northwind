@@ -15,7 +15,7 @@ const PrivateRoute=()=>{
 
 
     return (
-      <Layout>
+      <Layout style={{ minHeight: '100vh' }}>
        <NavbarComp/>
        <Outlet/>
          <FooterComp  />

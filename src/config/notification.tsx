@@ -6,7 +6,7 @@ export const successNotification = (message: string, description: string) => {
         message: message,
         description: description,
         placement: "bottomLeft",
-        duration: 1,
+        duration: 1, 
 
     });
     };

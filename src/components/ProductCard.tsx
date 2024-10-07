@@ -1,5 +1,5 @@
-import React from "react";
-import { Card, Button, Typography, Row, Col, notification,Image } from "antd";
+import React, { useEffect } from "react";
+import { Card, Button, Typography, Row, Col, notification,Image, Rate } from "antd";
 import { BasketRequest, Product } from "../types/Product";
 import { useMutation } from "@tanstack/react-query";
 import uuid from 'react-uuid';
@@ -16,6 +16,23 @@ type ProductCardProps = {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, imgPath }) => {
   const navigate = useNavigate();
+  const [review,setReview] = React.useState<number>(0);
+  useEffect(() => {
+    if (product.productReviews?.length != 0) {
+      const lenght =product.productReviews?.length ?? 0
+      var rev = 0;
+      product.productReviews?.map((review) => {
+        rev += review.star;
+      });
+      setReview(rev /lenght );
+    }else {
+      setReview(0);
+    }
+  }, [product.productReviews]);
+
+
+
+
 
   const addBasketMutation = useMutation({
     mutationFn: addBasketService,
@@ -92,6 +109,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, imgPath }) => {
     >
       <Meta
         description={
+          <>
+          <div style={{ textAlign: "center"}}>
+            <Rate disabled value={review} />
+          </div>
           <div style={{ textAlign: "center", padding: "10px 0" }}>
             <Title
               level={4}
@@ -125,6 +146,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, imgPath }) => {
               </Col>
             </Row>
           </div>
+          </>
         }
       />
     </Card>

@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom"
 
 const PublicRoute = ()=>{
     return (
-    <Layout>
+    <Layout style={{ minHeight: '100vh' }}>
         <Outlet/>
     </Layout>
 

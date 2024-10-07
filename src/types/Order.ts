@@ -1,37 +1,60 @@
-import { Customer } from './Customer';
-import { Employee } from './Employee';
-
+import { Customer } from "./Customer";
+import { Employee } from "./Employee";
+import { Product } from "./Product";
 
 export type Order = {
-    orderID: number;
-    customerID: string;
-    employeeID: number;
-    orderDate?: Date | null;
-    requiredDate?: Date | null;
-    shippedDate?: Date | null;
-    freight: number;
-    shipName: string;
-    shipCity: string;
-    shipPostalCode: string;
-    shipCountry: string;
-    shipAddress: string;
-    customer?: Customer; 
-    employee?: Employee;
-    orderDetails?: OrderDetail[];
-
+  orderID: number;
+  customerID: string;
+  employeeID: number;
+  orderDate?: Date | null;
+  requiredDate?: Date | null;
+  shippedDate?: Date | null;
+  orderNumber: string;
+  freight: number;
+  shipName: string;
+  shipCity: string;
+  shipPostalCode: string;
+  shipCountry: string;
+  shipAddress: string;
+  totalPrice: number;
+  customer?: Customer;
+  employee?: Employee;
+  orderStatus: OrderStatus;
+  orderDetails?: OrderDetail[];
 };
 export type CreateOrder = {
-    token: string;
-    orderDate?: Date | null;
-    requiredDate?: Date | null;
-    shippedDate?: Date | null;
-    orderDetails?: OrderDetail[];
-
+  orderDate?: Date | null;
+  requiredDate?: Date | null;
+  shippedDate?: Date | null;
+  freight?: number | 0;
+  shipName: string;
+  shipAddress: string;
+  shipCity: string;
+  shipRegion: string;
+  shipPostalCode: string;
+  shipCountry: string;
 };
 
 export type OrderDetail = {
-    productID: number;
-    unitPrice: number;
-    quantity: number;
-    discount: number;
+  productID: number;
+  unitPrice: number;
+  quantity: number;
+  discount: number;
+  product: Product;
+};
+
+export type OrderStatus = {
+  orderStatusID: number;
+  statusName: string;
+  status: number;
+  color: string;
+};
+
+export type OrderDetailProps = {
+  order: Order;
+};
+
+export type ChangeOrderStatusRequest = {
+  orderID: number;
+  orderStatusID: number;
 };

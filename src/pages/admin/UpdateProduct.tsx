@@ -12,17 +12,17 @@ import {
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
-import { Product, ProductImage } from "../types/Product";
+import { Product, ProductImage } from "../../types/Product";
 import TextArea from "antd/es/input/TextArea";
-import { useFetchProduct } from "../hooks/useFetchProducts";
-import { useFetchCategories } from "../hooks/useFetchCategories";
-import { Category } from "../types/Category";
-import Loading from "../components/Loading";
+import { useFetchProduct } from "../../hooks/useFetchProducts";
+import { useFetchCategories } from "../../hooks/useFetchCategories";
+import { Category } from "../../types/Category";
+import Loading from "../../components/Loading";
 import { useMutation } from "@tanstack/react-query";
-import { deleteImage,uploadImageApi } from "../services/ImageService";
-import { updateProduct } from "../services/ProductService";
-import { useFetchAuthorization } from "../hooks/useFetchAuthorization";
-import { errorNotification, successNotification } from "../config/notification";
+import { deleteImage,uploadImageApi } from "../../services/ImageService";
+import { updateProduct } from "../../services/ProductService";
+import { useFetchAuthorization } from "../../hooks/useFetchAuthorization";
+import { errorNotification, successNotification } from "../../config/notification";
 
 const { Option } = Select;
 
@@ -162,10 +162,12 @@ const UpdateProduct: React.FC = () => {
   }
 
   return (
-    <div>
-      <h2>Update Product</h2>
-      <Row gutter={16}>
-        <Col span={12} offset={6}>
+    <Card title="Update Product">
+      <Button type="primary" href="/admin/products">
+        Back to Products
+      </Button>
+      <Row gutter={24}>
+        <Col span={24} >
           <Form form={form} layout="vertical" onFinish={onFinish}>
             <Card>
               <Form.Item
@@ -259,7 +261,7 @@ const UpdateProduct: React.FC = () => {
           </Form>
         </Col>
       </Row>
-    </div>
+    </Card>
   );
 };
 
