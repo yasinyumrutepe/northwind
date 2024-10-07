@@ -1,4 +1,5 @@
 import { Category } from './Category';
+import { ProductReview } from './ProductReview';
 export type Product = {
    productID : number;
    productName : string;
@@ -8,6 +9,7 @@ export type Product = {
    category? : Category;
    description? : string;
    productImages? : ProductImage[];
+   productReviews? : ProductReview[];
 };
 
 export type GetProductsByCategoryRequest = {

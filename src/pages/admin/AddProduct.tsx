@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { Form, Input, Button, Select, Upload, Row, Col, Typography } from 'antd';
-import { createProduct } from '../services/ProductService';
+import { Form, Input, Button, Select, Upload, Row, Col,  Card } from 'antd';
+import { createProduct } from '../../services/ProductService';
 import { UploadOutlined } from '@ant-design/icons';
 import { useRecoilValue } from 'recoil';
-import { categoryState } from '../state/CategoryState';
-import { useFetchAuthorization } from '../hooks/useFetchAuthorization';
-import Loading from '../components/Loading';
-import { errorNotification, successNotification } from '../config/notification';
+import { categoryState } from '../../state/CategoryState';
+import { useFetchAuthorization } from '../../hooks/useFetchAuthorization';
+import Loading from '../../components/Loading';
+import { errorNotification, successNotification } from '../../config/notification';
 
-const { Title } = Typography;
 const { Option } = Select;
 
 const AddProduct: React.FC = () => {
@@ -50,8 +49,10 @@ const AddProduct: React.FC = () => {
   
 
   return (
-    <div style={{ padding: '20px' }}>
-      <Title level={4}>Add Product</Title>
+    <Card title="Add Product" style={{ padding: '20px' }}>
+      <Button type="primary" style={{ marginBottom: '10px' }} href="/admin/products">
+        Back to Products
+      </Button>
       <Form
         layout="vertical"
         onFinish={onFinish}
@@ -131,7 +132,7 @@ const AddProduct: React.FC = () => {
           </Col>
         </Row>
       </Form>
-    </div>
+    </Card>
   );
 };
 

@@ -6,21 +6,19 @@ import {
   InputNumber,
   Switch,
   Card,
-  Typography,
 } from "antd";
-import { addCampaign } from "../services/CampaignService";
-import { Campaign } from "../types/Campaign";
+import { addCampaign } from "../../services/CampaignService";
+import { CampaignRequest } from "../../types/Campaign";
 import { useMutation } from "@tanstack/react-query";
-import { errorNotification, successNotification } from "../config/notification";
+import { errorNotification, successNotification } from "../../config/notification";
 
-const { Title } = Typography;
 
 const AddCampaign: React.FC = () => {
   const [form] = Form.useForm();
   const [isPercentage, setIsPercentage] = useState<boolean>(true); // Yüzde mi olduğunu tutar
 
   const addCampaignMutation = useMutation({
-    mutationFn: (campaign: Campaign) => addCampaign(campaign),
+    mutationFn: (campaign: CampaignRequest) => addCampaign(campaign),
     onSuccess: () => {
       successNotification(
         "Campaign Added",
@@ -35,9 +33,8 @@ const AddCampaign: React.FC = () => {
       );
     },
   });
-
   const onFinish = (values: any) => {
-    var campaing: Campaign = {
+    var campaing: CampaignRequest = {
       campaignName: values.campaignName,
       discountAmount: values.discountAmount,
       isPercent: isPercentage,
@@ -46,8 +43,12 @@ const AddCampaign: React.FC = () => {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <Title level={3}>Add Campaign</Title>
+    <Card style={{ padding: "20px" }}
+     title="Add Campaign"
+    >
+      <Button type="primary" style={{ marginBottom: "10px" }} href="/admin/campaigns">
+        Back to Campaigns
+      </Button>
       <Card>
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Form.Item
@@ -57,7 +58,6 @@ const AddCampaign: React.FC = () => {
           >
             <Input placeholder="Enter campaign name" />
           </Form.Item>
-
           <Form.Item
             label="Discount Rate"
             name="discountAmount"
@@ -82,7 +82,7 @@ const AddCampaign: React.FC = () => {
           </Form.Item>
         </Form>
       </Card>
-    </div>
+    </Card>
   );
 };
 

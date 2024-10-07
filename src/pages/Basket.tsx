@@ -19,8 +19,7 @@ import {
   fetchAllBaskets,
   updateQuantity,
 } from "../services/BasketService";
-import { Campaign } from "../types/Campaign";
-import { createOrder } from "../services/OrderService";
+import { CampaignRequest } from "../types/Campaign";
 import { errorNotification, successNotification } from "../config/notification";
 
 const { Title, Text } = Typography;
@@ -28,7 +27,7 @@ const { Title, Text } = Typography;
 const Basket: React.FC = () => {
   const [basketItems, setBasketItems] = useState<BasketRequest>() ?? [];
   const [discountCode, setDiscountCode] = useState<string>("");
-  const [campaign, setCampaign] = useState<Campaign>() ?? null;
+  const [campaign, setCampaign] = useState<CampaignRequest>() ?? null;
 
   const basketQuery = useQuery({
     queryKey: ["basket"],
@@ -42,7 +41,10 @@ const Basket: React.FC = () => {
       setBasketItems(newBasket);
     },
     onError: () => {
-      errorNotification("Error", "An error occurred while removing item from cart");
+      errorNotification(
+        "Error",
+        "An error occurred while removing item from cart"
+      );
     },
   });
 
@@ -76,17 +78,6 @@ const Basket: React.FC = () => {
       errorNotification("Error", "An error occurred while applying discount");
     },
   });
-
-  const addOrderMutation = useMutation({
-    mutationFn: () => createOrder(),
-    onSuccess: () => {
-      successNotification("Success", "Order added successfully");
-    },
-    onError: () => {
-      errorNotification("Error", "An error occurred while adding order");
-    },
-  });
-
   useEffect(() => {
     if (basketQuery.isSuccess) {
       if (basketQuery.data.discount == null) {
@@ -97,7 +88,7 @@ const Basket: React.FC = () => {
 
       setBasketItems(basketQuery.data);
     }
-  }, [basketQuery.isSuccess, basketQuery.data,setBasketItems]);
+  }, [basketQuery.isSuccess, basketQuery.data, setBasketItems]);
 
   const applyDiscount = () => {
     addCampaignMutation.mutate(discountCode);
@@ -108,12 +99,7 @@ const Basket: React.FC = () => {
   };
 
   const handleRemove = (id: number) => {
-    console.log("Removing item with ID:", id);
     deleteBasketMutation.mutate(id);
-  };
-
-  const addOrder = () => {
-    addOrderMutation.mutate();
   };
 
   return (
@@ -222,7 +208,7 @@ const Basket: React.FC = () => {
             type="primary"
             block
             style={{ marginTop: 10 }}
-            onClick={addOrder}
+            href="/orders/checkout"
           >
             Buy
           </Button>

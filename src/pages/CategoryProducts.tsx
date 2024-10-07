@@ -22,10 +22,10 @@ const CategoryProducts = () => {
   if(productsByCategoryQuery.isSuccess){
       return (                                                      
         <div style={{ padding: '20px' }}>
-      <Row gutter={[16, 16]}>
+      <Row gutter={[12, 24]}>
         {productsByCategoryQuery.data?.data?.map((product:Product) => (
-          <Col key={product.productID} xs={24} sm={12} md={6} lg={4}>
-              <ProductCard product={product } imgPath={'https://random.imagecdn.app/300/200'}/>
+          <Col key={product.productID} xs={24} sm={12} md={8} lg={6}>
+              <ProductCard product={product }  imgPath={'error'}/>
           </Col>
         ))}
       </Row>

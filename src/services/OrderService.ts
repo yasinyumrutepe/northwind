@@ -1,4 +1,5 @@
 import api from '../api/api';
+import { ChangeOrderStatusRequest, CreateOrder} from '../types/Order';
 
 export const fetchAllOrders = async (page?:number,limit?:number) => {
 
@@ -11,14 +12,14 @@ export const fetchAllOrders = async (page?:number,limit?:number) => {
     return response.data;
 }
 
-export const fetchAllCustomerOrders = async (token?:string,page?:number,limit?:number) => {
+export const fetchAllCustomerOrders = async (page?:number,limit?:number) => {
     
         if(!page || !limit){
-            const response = await api.get('/Order/customer/'+token);
+            const response = await api.get('/Order/customer');
             return response.data
         }
     
-        const response = await api.get('/Order/customer/'+token+'?page='+page+'&limit='+limit+'');
+        const response = await api.get('/Order/customer?page='+page+'&limit='+limit+'');
         return response.data;
     }
 
@@ -27,8 +28,8 @@ export const fetchOrder = async (id:Number) => {
     return response.data;
 }
 
-export const createOrder = async () => {
-    const response = await api.post('/Order');
+export const createOrder = async (order:CreateOrder) => {
+    const response = await api.post('/Order',order);
     return response.data;
 }
 
@@ -44,4 +45,8 @@ export const deleteOrder = async (id:Number) => {
   
 }
 
+export const changeOrderStatus = async (changeStatusRequest:ChangeOrderStatusRequest) => {
+    const response = await api.put(`/Order/status/`,changeStatusRequest);
+    return response.data;
+}
 

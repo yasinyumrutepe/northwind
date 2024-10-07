@@ -22,7 +22,7 @@ const Home: React.FC = () => {
     return (
       <div   style={{ padding: '20px' }}>
 
-      <Row gutter={[24, 24]}>
+      <Row gutter={[12, 24]}>
         <Col>
            <CarouselComponent />
         </Col>
