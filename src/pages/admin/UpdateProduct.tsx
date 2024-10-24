@@ -77,7 +77,10 @@ const UpdateProduct: React.FC = () => {
         unitPrice: updatedProduct.unitPrice,
         categoryID: updatedProduct.categoryID,
         description: updatedProduct.description,
+        unitsInStock : updatedProduct.unitsInStock,
       });
+
+      window.location.href = '/admin/products';
 
     },
     onError: () => {
@@ -94,14 +97,15 @@ const UpdateProduct: React.FC = () => {
         unitPrice: productData.unitPrice,
         categoryID: productData.categoryID,
         description: productData.description,
+        unitsInStock : productData.unitsInStock,
       });
 
       const formattedImages = productData.productImages?.map(
         (image: ProductImage) => ({
-          uid: image.imagePublicID.toString(), // benzersiz ID
-          name: image.productImageID, // resim adı
-          status: "done", // durum 'done' çünkü resimler zaten yüklendi
-          url: image.imagePath, // resmin gösterileceği URL
+          uid: image.imagePublicID.toString(), 
+          name: image.productImageID, 
+          status: "done", 
+          url: image.imagePath, 
         })
       );
 
@@ -127,7 +131,7 @@ const UpdateProduct: React.FC = () => {
       productName: values.productName,
       categoryID: values.categoryID,
       unitPrice: values.unitPrice,
-      quantityPerUnit: "",
+      unitsInStock: values.unitsInStock,
       description: values.description,
     };
     updateProductMutation.mutate(updatedProduct);
@@ -233,7 +237,22 @@ const UpdateProduct: React.FC = () => {
                 </Select>
               </Form.Item>
             </Card>
-
+            <Card title="Stock" style={{ marginTop: "10px" }}>
+              <Form.Item
+                label="Stock"
+                name="unitsInStock"
+                rules={[
+                  { required: true, message: "Please enter product stock" },
+                ]}
+              >
+                <InputNumber
+                  min={0}
+                  step={1}
+                  style={{ width: "100%" }}
+                  placeholder="Enter product stock"
+                />
+              </Form.Item>
+            </Card>
             <Card title="Pricing" style={{ marginTop: "10px" }}>
               <Form.Item
                 label="Price (₺)"

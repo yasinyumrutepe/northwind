@@ -7,7 +7,9 @@ export const useFetchCategories = () =>{
     const allCategories = useQuery({
         queryKey: ['categories'],
         queryFn: () => fetchAllCategories(),
-        retry:false
+        retry:false,
+        refetchOnWindowFocus:false,
+        refetchOnMount:false
       },
     );
     return allCategories
@@ -21,7 +23,8 @@ export const useFetchCategory = (categoryID:number)=>{
       queryFn: () => fetchCategory(categoryID),
       enabled: !isNaN(categoryID),
       retry:false,
-      
+      refetchOnWindowFocus:false,
+      refetchOnMount:false
     },
   );
   return category

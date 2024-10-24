@@ -6,7 +6,8 @@ import {
   Divider,
   Image,
   Rate,
-  Button
+  Button,
+  Timeline,
 } from "antd";
 import { OrderDetailProps } from "../types/Order";
 import TextArea from "antd/es/input/TextArea";
@@ -15,11 +16,13 @@ import { errorNotification, successNotification } from "../config/notification";
 import { createReview } from "../services/ProductReview";
 import { useMutation } from "@tanstack/react-query";
 import { ProductReviewRequest } from "../types/ProductReview";
-
+import { ClockCircleOutlined } from "@ant-design/icons";
 const { Title } = Typography;
 
 const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
-  const [reviews, setReviews] = useState<Record<number, ProductReviewRequest>>({});
+  const [reviews, setReviews] = useState<Record<number, ProductReviewRequest>>(
+    {}
+  );
 
   const addReviewMutation = useMutation({
     mutationFn: createReview,
@@ -56,14 +59,21 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
 
   const sendReview = (productId: number) => {
     const productReview = reviews[productId];
-    if (!productReview || productReview.star === 0 || productReview.review === "") {
+    if (
+      !productReview ||
+      productReview.star === 0 ||
+      productReview.review === ""
+    ) {
       errorNotification("Error", "Please fill in the required fields");
       return;
     }
     addReviewMutation.mutate(productReview);
   };
 
-  const handleReviewChange = (productId: number, value: Partial<ProductReviewRequest>) => {
+  const handleReviewChange = (
+    productId: number,
+    value: Partial<ProductReviewRequest>
+  ) => {
     setReviews((prevReviews) => ({
       ...prevReviews,
       [productId]: {
@@ -75,7 +85,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
   };
 
   const orderReview = (detail: any) => {
-    if (order.orderStatus.status === 3) {
+    if (3 === 3) {
       return (
         <>
           <Col span={8}>
@@ -86,6 +96,8 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
               <Rate
                 style={{ marginLeft: "10px", marginTop: "5px" }}
                 allowHalf
+                disabled={detail.product.productReviews?.[0]?.star > 0}
+                value={detail.product.productReviews?.[0]?.star}
                 onChange={(value) =>
                   handleReviewChange(detail.product.productID, { star: value })
                 }
@@ -100,19 +112,26 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
               placeholder="Enter your review"
               autoSize={{ minRows: 8, maxRows: 8 }}
               minLength={10}
+              value={detail.product.productReviews?.[0]?.review}
               onChange={(e) =>
-                handleReviewChange(detail.product.productID, { review: e.target.value })
+                handleReviewChange(detail.product.productID, {
+                  review: e.target.value,
+                })
               }
             />
           </Col>
 
-          <Button
-            type="primary"
-            onClick={() => sendReview(detail.product.productID)}
-            style={{ marginTop: "10px" }}
-          >
-            Submit
-          </Button>
+          {detail.product.productReviews?.[0]?.review.length > 0 ? (
+            <Button
+              type="primary"
+              onClick={() => sendReview(detail.product.productID)}
+              style={{ marginTop: "10px" }}
+            >
+              Submit
+            </Button>
+          ) : (
+            ""
+          )}
         </>
       );
     } else {
@@ -135,7 +154,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
 
   return (
     <Row gutter={[12, 12]}>
-      <Col span={16}>
+      <Col span={18}>
         <Card title={"Order Info"}>
           {order.orderDetails?.map((detail, idx) => (
             <Card key={idx}>
@@ -145,7 +164,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
                     src={
                       detail.product.productImages?.[0]?.imagePath ?? "error"
                     }
-                    fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIA..."
+                    fallback="data:image/png;base64,..."
                   />
                 </Col>
                 {orderReview(detail)}
@@ -153,6 +172,39 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
             </Card>
           ))}
         </Card>
+      </Col>
+      <Col span={6}>
+        <Row>
+          <Col span={24}>
+            <Card title="Order Info">
+              <Timeline mode="left">
+                {
+                  order.orderStatuses?.map((status, idx) => (
+                    <Timeline.Item
+                      key={idx}
+                      label={new Date(status.createdAt).toLocaleString("tr-TR", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                      dot={<ClockCircleOutlined style={{ fontSize: "16px" }} />}
+                      color={status.status.statusName === "Delivered" ? "green" : "gray"}
+                    >
+                      {status.status.statusName}
+                    </Timeline.Item>
+                  ))
+                }
+              </Timeline>
+            </Card>
+          </Col>
+          <Col span={24}>
+            <Card title="Order Summary">
+              <p>Total Price: {order.totalPrice}</p>
+            </Card>
+          </Col>
+        </Row>
       </Col>
     </Row>
   );

@@ -1,11 +1,12 @@
 import { Row, Col, Tag,Image } from "antd";
 import { useEffect, useState } from "react";
 import { OrderDetailProps } from "../types/Order";
+import OrderTimeline from "./OrderTimeline";
 
 
 const OrderLabel: React.FC<OrderDetailProps> = ({ order }) => {
     const [orderProductsImage, setOrderProductsImage] = useState<string[]>([]);
-
+   
     useEffect(() => {
         const uniqueImages: string[] = [];
         order.orderDetails?.forEach(element => {
@@ -16,6 +17,7 @@ const OrderLabel: React.FC<OrderDetailProps> = ({ order }) => {
                 }
             }
         });
+       
         setOrderProductsImage(uniqueImages);
     }, [order]);
     const orderDate = order.orderDate ? new Date(order.orderDate) : null;
@@ -69,9 +71,7 @@ const OrderLabel: React.FC<OrderDetailProps> = ({ order }) => {
             </Col>
 
             <Col>
-                <Tag color={order.orderStatus.color }>
-                    {order.orderStatus.statusName}
-                </Tag>
+            <OrderTimeline orderStatuses={order.orderStatuses} /> 
             </Col>
 
             <Col style={{ textAlign: "right" }}>

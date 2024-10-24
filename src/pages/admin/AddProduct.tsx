@@ -38,7 +38,7 @@ const AddProduct: React.FC = () => {
     formData.append('productName', values.productName);
     formData.append('categoryID', values.category);
     formData.append('unitPrice', values.unitPrice);
-    formData.append('quantityPerUnit', values.quantityPerUnit);
+    formData.append('stock', values.stock);
     formData.append('description', values.description);
     fileList.forEach((file) => {
       formData.append('images', file.originFileObj); 
@@ -109,11 +109,11 @@ const AddProduct: React.FC = () => {
             </Form.Item>
 
             <Form.Item
-              label="Quantity Per Unit"
-              name="quantityPerUnit"
-              rules={[{ required: true, message: 'Please enter the quantity per unit!' }]}
+              label="Product Stock"
+              name="stock"
+              rules={[{ required: true, message: 'Please enter the product stock!' }]}
             >
-              <Input placeholder="Quantity Per Unit" />
+              <Input placeholder="Stock" />
             </Form.Item>
 
             <Form.Item

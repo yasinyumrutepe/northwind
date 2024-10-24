@@ -35,23 +35,20 @@ const NavbarComp: React.FC = () => {
 
   const checkAdmin = () => {
     if (localStorage.getItem("authToken")) {
-        
-
-
       return (
         <Menu.Item key="admin">
           <Link to="/admin">Admin</Link>
         </Menu.Item>
       );
     }
-  }
+  };
+
   const isMobile = window.innerWidth < 768;
   const menu = (
     <Menu
       mode={isMobile ? "vertical" : "horizontal"}
       style={{ width: isMobile ? "100%" : "auto" }}
     >
-
       <Menu.Item key="profile">
         <Link to="/profile">Profile</Link>
       </Menu.Item>
@@ -87,8 +84,6 @@ const NavbarComp: React.FC = () => {
     }
   };
 
-
-
   const logout = () => {
     localStorage.removeItem("authToken");
     navigate("/login");
@@ -105,11 +100,15 @@ const NavbarComp: React.FC = () => {
       }}
     >
       <Row style={{ width: "100%", display: "flex", alignItems: "center" }}>
-        <Col xs={24} sm={12} md={8}>
+        <Col xs={24} sm={8} md={8}>
           <Menu
             theme="light"
-            mode="horizontal"
-            style={{ display: "flex", alignItems: "center", fontSize: "12px" }}
+            mode={isMobile ? "vertical" : "horizontal"}
+            style={{
+              display: "flex",
+              justifyContent: isMobile ? "center" : "flex-start",
+              fontSize: "12px",
+            }}
           >
             {category.map((category: Category) => (
               <Menu.Item key={category.categoryID}>
@@ -120,27 +119,25 @@ const NavbarComp: React.FC = () => {
             ))}
           </Menu>
         </Col>
-        <Col xs={24} sm={12} md={8} style={{ textAlign: "center" }}>
+        <Col xs={24} sm={8} md={8} style={{ textAlign: "center" }}>
           <div style={{ textAlign: "center", flexGrow: 1 }}>
             <Link to="/">
               <img
                 src="/assets/logo.svg"
                 alt="Logo"
-                style={{ height: "40px" }}
+                style={{
+                  maxWidth: "100%",
+                  height: "auto",
+                  width: isMobile ? "120px" : "150px", 
+                }}
               />
             </Link>
           </div>
         </Col>
-      
-        <Col
-          xs={24}
-          sm={12}
-          md={8}
-          style={{ display: "flex", justifyContent: "flex-end" }}
-        >
+        <Col xs={24} sm={8} md={8} style={{ display: "flex", justifyContent: "flex-end" }}>
           <Menu
             theme="light"
-            mode="horizontal"
+            mode={isMobile ? "vertical" : "horizontal"}
             style={{ display: "flex", alignItems: "center" }}
           >
             {checkAuth()}

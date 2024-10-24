@@ -14,6 +14,7 @@ import { errorNotification, successNotification } from "../config/notification";
 import type { TabsProps } from 'antd';
 import ReviewOrder from "../components/RewiewOrder";
 import ProductDescription from "../components/ProductDescription";
+import SizeTable from "../components/SizeTable";
 const { Title, Text, Paragraph } = Typography;
 
 const ProductDetail: React.FC = () => {
@@ -100,6 +101,11 @@ const ProductDetail: React.FC = () => {
       label: 'Reviews',
       children: <ReviewOrder productReview={product?.productReviews || []} />,
     },
+    {
+      key: '3',
+      label: 'Size Tables',
+      children: <SizeTable />,
+    },
   ];
 
   return (
@@ -145,11 +151,8 @@ const ProductDetail: React.FC = () => {
         <Col xs={24} md={12}>
           <div style={{ padding: '20px', minHeight: '300px' }}>
             <Title level={2}>{product?.productName}</Title>
-            <Rate  value={productRates} disabled />
+            <Rate  value={productRates} disabled allowHalf />
             <Text type="secondary">Category: {product?.category?.categoryName}</Text>
-            <Paragraph>
-              <Text strong>Quantity Per Unit:</Text> {product?.quantityPerUnit}
-            </Paragraph>
             <Divider />
             <Title level={3} style={{ color: '#ff4d4f' }}>{product?.unitPrice} ₺</Title>
             <Paragraph>{product?.description}</Paragraph>

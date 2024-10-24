@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from "react";
 import {
-  List,
-  Button,
-  InputNumber,
   Row,
-  Col,
-  Card,
   Typography,
-  Input,
+  Table,
   Divider,
+  Card,
+  Button,
+  Col,
+  Input,
+  InputNumber,
 } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
-import { BasketRequest, UpdateQuantityType } from "../types/Product";
+import { DeleteOutlined, HeartOutlined } from "@ant-design/icons";
+import {
+  BasketItem,
+  BasketResponse,
+  UpdateQuantityType,
+} from "../types/Product";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   addCampaign,
@@ -25,7 +29,7 @@ import { errorNotification, successNotification } from "../config/notification";
 const { Title, Text } = Typography;
 
 const Basket: React.FC = () => {
-  const [basketItems, setBasketItems] = useState<BasketRequest>() ?? [];
+  const [basketItems, setBasketItems] = useState<BasketResponse>() ?? [];
   const [discountCode, setDiscountCode] = useState<string>("");
   const [campaign, setCampaign] = useState<CampaignRequest>() ?? null;
 
@@ -102,119 +106,163 @@ const Basket: React.FC = () => {
     deleteBasketMutation.mutate(id);
   };
 
+  const columns = [
+    {
+      title: "Product",
+      dataIndex: "productName",
+      render: (text: string, record: BasketItem) => (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <img
+            src={record.images[0]?.imagePath ?? ""}
+            alt={record.productName}
+            style={{ width: "60px", marginRight: "16px" }}
+          />
+          <div>
+            <div>{text}</div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "Quantity",
+      dataIndex: "quantity",
+      render: (text: number, record: BasketItem) => (
+        <InputNumber
+          min={1}
+          value={record.quantity}
+          onChange={(value) => handleQuantityChange(record.productID, value)}
+        />
+      ),
+    },
+    {
+      title: "Price",
+      dataIndex: "totalPrice",
+      render: (totalPrice: number) => <span>${totalPrice}</span>,
+    },
+    {
+      title: "",
+      render: (_: any, record: BasketItem) => (
+        <div>
+          <Button icon={<HeartOutlined />} style={{ marginRight: "8px" }} />
+          <Button
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => handleRemove(record.productID)}
+          />
+        </div>
+      ),
+    },
+  ];
+
   return (
-    <Row gutter={[16, 16]} style={{ padding: "20px" }}>
-      <Col span={16}>
-        <Card title="Your Basket" bordered={false}>
-          {basketItems?.items?.map((item) => (
-            <Card key={item.productID} style={{ marginBottom: "16px" }}>
-              <Row align="middle">
-                <Col span={8}>
-                  <img
-                    src={item.images[0]?.imagePath ?? ""}
-                    alt={item.productName}
-                    style={{
-                      width: "100%",
-                      maxHeight: "200px",
-                      objectFit: "cover",
-                    }}
+    <div style={{ padding: "0 100px" }}>
+      <Card>
+        <Row gutter={16}>
+          <Col xs={24} lg={16}>
+            <Table<BasketItem>
+              columns={columns}
+              dataSource={basketItems?.items}
+              rowKey="productID"
+              pagination={false}
+              footer={() => (
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Button href="/">Continue shopping</Button>
+                  <Button href="/orders/checkout" type="primary">
+                    Make Purchase
+                  </Button>
+                </div>
+              )}
+            />
+            <div
+              style={{
+                marginTop: "16px",
+                backgroundColor: "#e6fffb",
+                padding: "10px",
+              }}
+            >
+              <Text type="success">Free Delivery within 1-2 weeks</Text>
+            </div>
+          </Col>
+
+          <Col xs={24} lg={8}>
+            {" "}
+            {/* Responsive genişlik ayarı */}
+            <Card title="Have coupon?" bordered={false}>
+              <Row gutter={8}>
+                <Col span={16}>
+                  <Input
+                    placeholder="Coupon Code"
+                    value={discountCode}
+                    onChange={(e) => setDiscountCode(e.target.value)}
                   />
                 </Col>
-                <Col span={8} offset={8} style={{ paddingLeft: "16px" }}>
-                  <Card.Meta
-                    title={item.productName}
-                    description={`Birim Fiyatı: ${item.unitPrice} ₺`}
-                  />
-                  <div style={{ marginTop: 10 }}>
-                    <InputNumber
-                      min={1}
-                      value={item.quantity}
-                      onChange={(value) =>
-                        handleQuantityChange(item.productID, value)
-                      }
-                      style={{ marginRight: 8 }}
-                    />
-                    <Button
-                      type="primary"
-                      danger
-                      icon={<DeleteOutlined />}
-                      onClick={() => handleRemove(item.productID)}
-                    >
-                      Sil
-                    </Button>
-                  </div>
-                  <Text strong style={{ marginTop: 10 }}>
-                    Toplam: {item.totalPrice} ₺
-                  </Text>
+                <Col span={8}>
+                  <Button type="primary" block onClick={applyDiscount}>
+                    Apply
+                  </Button>
                 </Col>
               </Row>
             </Card>
-          ))}
-        </Card>
-      </Col>
+            <Card
+              title="Order Summary"
+              bordered={false}
+              style={{ marginTop: "20px" }}
+            >
+              <div>
+                <div style={{ fontSize: "16px", margin: "2px" }}>
+                  Total price:{" "}
+                  {basketItems?.items.reduce(
+                    (total, item) => total + item.unitPrice * item.quantity,
+                    0
+                  )}{" "}
+                  TL
+                </div>
+                {basketItems?.discount != null ? (
+                  <div
+                    style={{ fontSize: "16px", margin: "2px", color: "green" }}
+                  >
+                    Discount: -
+                    {basketItems?.discount
+                      ? basketItems.discount.isPercent
+                        ? (
+                            (basketItems?.items.reduce(
+                              (total, item) =>
+                                total + item.unitPrice * item.quantity,
+                              0
+                            ) *
+                              basketItems.discount.discountAmount) /
+                            100
+                          ).toFixed(2)
+                        : basketItems.discount.discountAmount.toFixed(2)
+                      : (0).toFixed(2)}
+                    TL
+                  </div>
+                ) : null}
 
-      <Col span={8}>
-        <Card title="Order Summary" bordered={false}>
-          <div style={{ marginBottom: 10 }}>
-            <List
-              bordered
-              dataSource={basketItems?.items}
-              renderItem={(item) => (
-                <List.Item>
-                  <Typography.Text>{item.productName}</Typography.Text>
-                  <Typography.Text style={{ marginLeft: "auto" }}>
-                    {item.quantity} pcs{" "}
-                  </Typography.Text>
-                  <Typography.Text style={{ marginLeft: "16px" }}>
-                    {item.unitPrice * item.quantity} ₺
-                  </Typography.Text>
-                </List.Item>
-              )}
-            />
-          </div>
-          <Divider />
-          <Row gutter={8} style={{ marginBottom: 10 }}>
-            <Col span={16}>
-              <Input
-                placeholder="Promo Code"
-                value={discountCode}
-                onChange={(e) => setDiscountCode(e.target.value)}
-              />
-            </Col>
-            <Col span={8}>
-              <Button type="primary" block onClick={applyDiscount}>
-                Apply
-              </Button>
-            </Col>
-          </Row>
-
-          {campaign?.discountAmount ? (
-            <>
-              <Divider />
-              <Title level={5}>
-                Discount:{" "}
-                {campaign?.isPercent
-                  ? "%" + campaign.discountAmount
-                  : campaign?.discountAmount + "₺"}
-              </Title>
-            </>
-          ) : (
-            <></>
-          )}
-          <Divider />
-          <Title level={4}>Total: {basketItems?.totalPrice} ₺</Title>
-          <Divider />
-          <Button
-            type="primary"
-            block
-            style={{ marginTop: 10 }}
-            href="/orders/checkout"
-          >
-            Buy
-          </Button>
-        </Card>
-      </Col>
-    </Row>
+                <Divider />
+                <div>
+                  <Title level={4}>
+                    Total: {basketItems?.totalPrice.toFixed(2)} TL
+                  </Title>
+                </div>
+              </div>
+              <Col span={12}>
+                <Button
+                  href="/orders/checkout"
+                  type="primary"
+                  block
+                  style={{ marginTop: "16px" }}
+                >
+                  Make Purchase
+                </Button>
+              </Col>
+            </Card>
+          </Col>
+        </Row>
+      </Card>
+    </div>
   );
 };
 
