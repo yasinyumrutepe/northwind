@@ -1,5 +1,5 @@
 import api from '../api/api';
-import {  BasketRequest, UpdateQuantityType } from '../types/Product';
+import {  BasketRequest, BasketResponse, UpdateQuantityType } from '../types/Product';
 
 
 
@@ -21,13 +21,13 @@ export const addBasketService = async (basket:BasketRequest) => {
 
 export const deleteBasket = async (productID:number) => {
     console.log(productID);
-    const response = await api.delete<BasketRequest>('/Basket/'+productID);
+    const response = await api.delete<BasketResponse>('/Basket/'+productID);
     return response.data;
 }
 
 export const updateQuantity = async (updateQuantityData:UpdateQuantityType) => {
     console.log(updateQuantityData);
-    const response = await api.put<BasketRequest>('/Basket/quantity', updateQuantityData);
+    const response = await api.put<BasketResponse>('/Basket/quantity', updateQuantityData);
     return response.data;
 }
 

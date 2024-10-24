@@ -1,15 +1,17 @@
 import { Category } from './Category';
+import { ProductFavorite } from './ProductFavorite';
 import { ProductReview } from './ProductReview';
 export type Product = {
    productID : number;
    productName : string;
    categoryID : number;
    unitPrice : number;
-   quantityPerUnit : string;
+   unitsInStock : number;
    category? : Category;
    description? : string;
    productImages? : ProductImage[];
    productReviews? : ProductReview[];
+   productFavorites? : ProductFavorite[];
 };
 
 export type GetProductsByCategoryRequest = {
@@ -30,7 +32,6 @@ export type CreateProduct = {
    productName : string;
    categoryID : number;
    unitPrice : number;
-   quantityPerUnit : string;
    description : string;
 };
 
@@ -38,6 +39,13 @@ export type CreateProduct = {
 export type BasketRequest = {
    basketID : string;
    items : BasketItem[];
+   totalPrice : number;
+};
+
+export type BasketResponse = {
+   basketID : string;
+   items : BasketItem[];
+   discount : Discount;
    totalPrice : number;
 };
 
@@ -58,13 +66,13 @@ export type UpdateQuantityType = {
    quantity: number;
  };
 
-
-
-
-export type BasketResponse = {
-   product : BasketProduct[];
-   totalPrice : number;
+export type Discount = {
+   campaingName : string;
+   discountAmount : number;
+   isPercent : boolean;
 };
+
+
 export type BasketProduct = {
    basketID : string;
    product : Product;

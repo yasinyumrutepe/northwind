@@ -19,7 +19,7 @@ export type Order = {
   totalPrice: number;
   customer?: Customer;
   employee?: Employee;
-  orderStatus: OrderStatus;
+  orderStatuses: OrderStatus[];
   orderDetails?: OrderDetail[];
 };
 export type CreateOrder = {
@@ -45,16 +45,23 @@ export type OrderDetail = {
 
 export type OrderStatus = {
   orderStatusID: number;
-  statusName: string;
-  status: number;
-  color: string;
+  orderID:number;
+  statusID: number;
+  status: Status;
+  createdAt: Date;
 };
 
+export type Status = {
+  statusID: number;
+  statusName: string;
+  statusNumber: number;
+  color: string;
+};
 export type OrderDetailProps = {
   order: Order;
 };
 
 export type ChangeOrderStatusRequest = {
   orderID: number;
-  orderStatusID: number;
+  statusID: number;
 };

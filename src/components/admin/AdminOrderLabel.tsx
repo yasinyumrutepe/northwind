@@ -33,7 +33,7 @@ const AdminOrderLabel: React.FC<OrderDetailProps> = ({ order }) => {
     const orderDate = order.orderDate ? new Date(order.orderDate) : null;
 
     const changeStatus = (status: any) => {
-        updateStatusMutation.mutate({ orderID: order.orderID, orderStatusID: status });
+        updateStatusMutation.mutate({ orderID: order.orderID, statusID: status });
 
     }
 
@@ -86,11 +86,15 @@ const AdminOrderLabel: React.FC<OrderDetailProps> = ({ order }) => {
             </Col>
 
             <Col>
-            <Select defaultValue={order.orderStatus.statusName} onChange={(value) => changeStatus(value)} style={{ width: 120 }} >
-                <Select.Option value="1">Preparing</Select.Option>
-                <Select.Option value="2">Shipped</Select.Option>
-                <Select.Option value="3">Completed</Select.Option>
-                <Select.Option value="4">Cancelled</Select.Option>
+            <Select defaultValue={order.orderStatuses[order.orderStatuses.length -1].status.statusName} onChange={(value) => changeStatus(value)} style={{ width: 120 }} >
+                <Select.Option value={1}>Order Placed</Select.Option>
+                <Select.Option value={2}>Order Confirmed</Select.Option>
+                <Select.Option value={3}>Packed the product</Select.Option>
+                <Select.Option value={4}>Arrived in the warehouse</Select.Option>
+                <Select.Option value={5}>Near by Courier facility</Select.Option>
+                <Select.Option value={6}>Out for Delivery</Select.Option>
+                <Select.Option value={7}>Delivered</Select.Option>
+                <Select.Option value={8}>Cancelled</Select.Option>
             </Select>
               
             </Col>

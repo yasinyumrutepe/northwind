@@ -2,18 +2,24 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchAllProducts, fetchProduct, fetchProductsByCategory } from "../services/ProductService";
 import { GetProductsByCategoryRequest } from "../types/Product";
 import { useQueryFunc } from "../config/query";
+import { FilterType } from "../types/Variant";
 
 
 
-export const useFetchProducts = ()=>{
+export const useFetchProducts = (filters?:FilterType)=>{
     const allProductsQuery = useQuery({
-      queryKey: ['products'],
-      queryFn: () => fetchAllProducts(),
-      retry:false
+      queryKey: ['products', filters],
+      queryFn: () => fetchAllProducts(filters),
+      retry:false,
+      refetchOnWindowFocus:false,
+      refetchOnMount:true
+      
+   
     });
    return allProductsQuery
    
 }
+
 
 
 export const useFetchProduct = (id:number)=>{
@@ -37,10 +43,6 @@ export const useFetchProductsByCategory = (request:GetProductsByCategoryRequest)
 }
 
 
-export const useFetchProducts2 = ()=>{
-    const allProductsQuery = useQueryFunc(['products'],()=>fetchAllProducts())
-    return allProductsQuery
-}
 
 export const useFetchProduct2 = (id:number)=>{
     const productDetailQuery = useQueryFunc(['products',id],()=>fetchProduct(id))

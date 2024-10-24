@@ -25,6 +25,7 @@ import AddCampaign from "../pages/admin/AddCampaign"
 import AdminCampaigns from "../pages/admin/Campaings"
 import AdminCustomers from "../pages/admin/AdminCustomers"
 import AdminCategories from "../pages/admin/AdminCategories"
+import MyFavoriteProducts from "../pages/MyFavoriteProducts"
 
 
 export const AppRouter :React.FC = () => {
@@ -40,7 +41,7 @@ export const AppRouter :React.FC = () => {
        
         <Route path= "/products/:categoryid" element={<CategoryProducts/>}/>
         <Route path= "/product/:productid" element={<ProductDetail/>}/>
-       
+        <Route path="/myfavoriteproducts" element={<MyFavoriteProducts/>}/>
         <Route path= "/orders" element={<Orders/>}/>
         <Route path="/basket" element= {<Basket/>}/>
         <Route path="/profile" element={<ProfilePage/>}/>
