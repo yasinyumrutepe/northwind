@@ -5,61 +5,13 @@ import {
   Row,
   Divider,
   Image,
-  Rate,
-  Button,
   Timeline,
 } from "antd";
 import { OrderDetailProps } from "../types/Order";
-import TextArea from "antd/es/input/TextArea";
-import { useState } from "react";
-import { errorNotification, successNotification } from "../config/notification";
-import { createReview } from "../services/ProductReview";
-import { useMutation } from "@tanstack/react-query";
-import { ProductReviewRequest } from "../types/ProductReview";
 import { ClockCircleOutlined } from "@ant-design/icons";
 const { Title } = Typography;
 
 const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
-  const [reviews, setReviews] = useState<Record<number, ProductReviewRequest>>(
-    {}
-  );
-
-  const addReviewMutation = useMutation({
-    mutationFn: createReview,
-    onSuccess: () => {
-      successNotification("Success", "Review added successfully");
-    },
-    onError: () => {
-      errorNotification("Error", "An error occurred while adding review");
-    },
-  });
-
-  const sendReview = (productId: number) => {
-    const productReview = reviews[productId];
-    if (
-      !productReview ||
-      productReview.star === 0 ||
-      productReview.review === ""
-    ) {
-      errorNotification("Error", "Please fill in the required fields");
-      return;
-    }
-    addReviewMutation.mutate(productReview);
-  };
-
-  const handleReviewChange = (
-    productId: number,
-    value: Partial<ProductReviewRequest>
-  ) => {
-    setReviews((prevReviews) => ({
-      ...prevReviews,
-      [productId]: {
-        ...prevReviews[productId],
-        productId: productId,
-        ...value,
-      },
-    }));
-  };
 
   const orderReview = (detail: any) => {
    
