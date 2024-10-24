@@ -23,7 +23,6 @@ import {
   fetchAllBaskets,
   updateQuantity,
 } from "../services/BasketService";
-import { CampaignRequest } from "../types/Campaign";
 import { errorNotification, successNotification } from "../config/notification";
 
 const { Title, Text } = Typography;
