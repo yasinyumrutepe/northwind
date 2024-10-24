@@ -14,7 +14,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { fetchAllBaskets } from "../services/BasketService";
 import { BasketRequest } from "../types/Product";
-import Stripe_test from "../components/CheckoutForm";
+import StripeTest from "../components/CheckoutForm";
 
 
 
@@ -155,7 +155,7 @@ const Checkout: React.FC = () => {
             <div style={{ padding: "16px" }}>{renderAddressForm()}</div>
           </TabPane>
           <TabPane tab="Payment" key="2">
-          <Stripe_test totalPrice={basketItems?.totalPrice || 0}/>
+          <StripeTest totalPrice={basketItems?.totalPrice || 0}/>
           </TabPane> 
         </Tabs>
       </Card>

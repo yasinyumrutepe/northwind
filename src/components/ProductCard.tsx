@@ -35,15 +35,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, imgPath }) => {
   const navigate = useNavigate();
 
   const [isFavorited, setIsFavorited] = React.useState<boolean>(
-    product.productFavorites?.length != 0
+    product.productFavorites?.length !== 0
   );
   const [review, setReview] = React.useState<number>(0);
   useEffect(() => {
-    if (product.productReviews?.length != 0) {
+    if (product.productReviews?.length !== 0) {
       const lenght = product.productReviews?.length ?? 0;
       var rev = 0;
-      product.productReviews?.map((review) => {
+        product.productReviews?.map((review) => {
         rev += review.star;
+        return review.star;
       });
       setReview(rev / lenght);
     } else {

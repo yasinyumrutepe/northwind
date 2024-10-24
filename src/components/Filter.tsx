@@ -1,4 +1,4 @@
-import { Row, Col, Card, Checkbox, Slider, Rate, Button, Input } from "antd";
+import { Row, Col, Card, Checkbox,  Rate, Button, Input } from "antd";
 import { useRecoilValue } from "recoil";
 import { categoryState } from "../state/CategoryState";
 import { useFetchVariants } from "../hooks/useFetchColor";

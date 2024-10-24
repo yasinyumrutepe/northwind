@@ -37,7 +37,7 @@ const { Title } = Typography;
       addOrderMutation.mutate(createOrder);
       localStorage.removeItem('address'); 
     }
-  }, []);
+  }, [addOrderMutation]);
   
    return (
     <div>

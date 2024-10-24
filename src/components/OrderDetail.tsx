@@ -26,31 +26,8 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
 
   const addReviewMutation = useMutation({
     mutationFn: createReview,
-    onSuccess: (newReview) => {
+    onSuccess: () => {
       successNotification("Success", "Review added successfully");
-      const updatedOrderDetails = order.orderDetails?.map((detail) => {
-        if (detail.product.productID === newReview.productId) {
-          return {
-            ...detail,
-            product: {
-              ...detail.product,
-              productReviews: [
-                ...(detail.product.productReviews || []),
-                {
-                  productReviewID: newReview.productReviewID,
-                  productId: newReview.productID,
-                  review: newReview.review,
-                  star: newReview.star,
-                  customerID: newReview.customerID,
-                  customer: newReview.customer,
-                  product: newReview.product,
-                },
-              ],
-            },
-          };
-        }
-        return detail;
-      });
     },
     onError: () => {
       errorNotification("Error", "An error occurred while adding review");
@@ -85,56 +62,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
   };
 
   const orderReview = (detail: any) => {
-    if (3 === 3) {
-      return (
-        <>
-          <Col span={8}>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <Title level={5} style={{ margin: 0 }}>
-                {detail.product.productName}
-              </Title>
-              <Rate
-                style={{ marginLeft: "10px", marginTop: "5px" }}
-                allowHalf
-                disabled={detail.product.productReviews?.[0]?.star > 0}
-                value={detail.product.productReviews?.[0]?.star}
-                onChange={(value) =>
-                  handleReviewChange(detail.product.productID, { star: value })
-                }
-              />
-            </div>
-            <Divider />
-            <p>Price: {detail.product.unitPrice}</p>
-            <p>Quantity: {detail.quantity}</p>
-          </Col>
-          <Col span={10} style={{ padding: "10px" }}>
-            <TextArea
-              placeholder="Enter your review"
-              autoSize={{ minRows: 8, maxRows: 8 }}
-              minLength={10}
-              value={detail.product.productReviews?.[0]?.review}
-              onChange={(e) =>
-                handleReviewChange(detail.product.productID, {
-                  review: e.target.value,
-                })
-              }
-            />
-          </Col>
-
-          {detail.product.productReviews?.[0]?.review.length > 0 ? (
-            <Button
-              type="primary"
-              onClick={() => sendReview(detail.product.productID)}
-              style={{ marginTop: "10px" }}
-            >
-              Submit
-            </Button>
-          ) : (
-            ""
-          )}
-        </>
-      );
-    } else {
+   
       return (
         <>
           <Col span={8}>
@@ -149,7 +77,6 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
           </Col>
         </>
       );
-    }
   };
 
   return (
