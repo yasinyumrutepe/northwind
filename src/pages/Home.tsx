@@ -42,7 +42,7 @@ const Home: React.FC = () => {
         setProducts((prev) => [...prev, ...fetchProductQuery.data.data]);
       }
     }
-
+  
     if (fetchProductQuery.isError) {
       setHasMore(false);
       errorNotification("Error", "An error occurred while fetching products");
@@ -51,6 +51,7 @@ const Home: React.FC = () => {
     fetchProductQuery.isSuccess,
     fetchProductQuery.isError,
     filters.paginatedRequest.page,
+    fetchProductQuery.data?.data, // Eksik bağımlılık eklendi
   ]);
 
   const handleSort = (key: string) => {

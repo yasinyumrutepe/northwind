@@ -3,7 +3,6 @@ import ProductCard from "../components/ProductCard";
 import { ProductFavorite } from "../types/ProductFavorite";
 import { fetchFavoriteProducts } from "../services/ProductFavorite";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
 import Loading from "../components/Loading";
 
 

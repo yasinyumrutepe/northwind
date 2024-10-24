@@ -15,7 +15,7 @@ const AdminProducts = () => {
     if (fetchProductQuery.isSuccess) {
       setList(fetchProductQuery.data?.data ?? []);
     }
-  }, [fetchProductQuery.isLoading]);
+  }, [fetchProductQuery.isLoading, fetchProductQuery.isSuccess, fetchProductQuery.data?.data]);
 
   return (
     <Card title="Products">

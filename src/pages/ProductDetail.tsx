@@ -44,11 +44,10 @@ const ProductDetail: React.FC = () => {
       setProduct(productDetail.data);
       if (productDetail.data.productReviews && productDetail.data.productReviews.length > 0) {
         var rates = 0;
-        productDetail.data.productReviews?.map((review) => {
+        productDetail.data.productReviews.forEach((review) => {
           rates += review.star;
-  
         });
-        setProductRates(rates/productDetail.data.productReviews.length);
+        setProductRates(rates / productDetail.data.productReviews.length);
       }
      
       

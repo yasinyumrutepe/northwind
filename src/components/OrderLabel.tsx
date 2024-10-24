@@ -1,4 +1,4 @@
-import { Row, Col, Tag,Image } from "antd";
+import { Row, Col, Image } from "antd";
 import { useEffect, useState } from "react";
 import { OrderDetailProps } from "../types/Order";
 import OrderTimeline from "./OrderTimeline";

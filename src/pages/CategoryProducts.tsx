@@ -5,7 +5,6 @@ import { Product } from "../types/Product";
 import ProductCard from "../components/ProductCard";
 import { useFetchProductsByCategory } from "../hooks/useFetchProducts";
 import { errorNotification } from "../config/notification";
-import FilterComponent from "../components/Filter";
 
 const CategoryProducts = () => {
   const { categoryid } = useParams();

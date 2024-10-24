@@ -56,7 +56,7 @@ interface StripeProps {
   totalPrice: number;
 }
 
-const Stripe_test: React.FC<StripeProps> = ({ totalPrice }) => {
+const StripeTest: React.FC<StripeProps> = ({ totalPrice }) => {
   const [clientSecret, setClientSecret] = React.useState<string>("");
 
   const intentMutation = useMutation({
@@ -72,15 +72,14 @@ const Stripe_test: React.FC<StripeProps> = ({ totalPrice }) => {
 
   React.useEffect(() => {
     const amountInCents = Math.round(totalPrice * 100);
-    const mutationData = 
-      {
-        amount: amountInCents,
-        currency: "try",
-        paymentMethodTypes: ["card"],
-      }
+    const mutationData = {
+      amount: amountInCents,
+      currency: "try",
+      paymentMethodTypes: ["card"],
+    };
     intentMutation.mutate(mutationData);
-  }, []);
-
+  }, [intentMutation, totalPrice]);
+  
   const options = {
     clientSecret: clientSecret,
   };
@@ -96,4 +95,4 @@ const Stripe_test: React.FC<StripeProps> = ({ totalPrice }) => {
   );
 };
 
-export default Stripe_test;
+export default StripeTest;

@@ -5,8 +5,6 @@ import {
     Row,
     Divider,
     Image,
-    Rate,
-    Button
   } from "antd";
   import { OrderDetailProps } from "../../types/Order";
   

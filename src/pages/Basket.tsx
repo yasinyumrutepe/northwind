@@ -31,8 +31,6 @@ const { Title, Text } = Typography;
 const Basket: React.FC = () => {
   const [basketItems, setBasketItems] = useState<BasketResponse>() ?? [];
   const [discountCode, setDiscountCode] = useState<string>("");
-  const [campaign, setCampaign] = useState<CampaignRequest>() ?? null;
-
   const basketQuery = useQuery({
     queryKey: ["basket"],
     queryFn: () => fetchAllBaskets(),
@@ -71,10 +69,8 @@ const Basket: React.FC = () => {
       setBasketItems(basket);
       if (basket.discount == null) {
         setDiscountCode("");
-        setCampaign({ campaignName: "", discountAmount: 0, isPercent: false });
       } else {
         setDiscountCode(basket.discount.campaignName);
-        setCampaign(basket.discount);
       }
     },
 
