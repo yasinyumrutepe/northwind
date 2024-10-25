@@ -17,6 +17,7 @@ const stripePromise = loadStripe(
 const PaymentForm: React.FC = () => {
   const stripe = useStripe();
   const elements = useElements();
+  const  REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -28,7 +29,7 @@ const PaymentForm: React.FC = () => {
     const result = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: "http://localhost:3000/orders/checkout/success",
+        return_url: `${REACT_APP_BASE_URL}/orders/checkout/success`,
       },
     });
 
