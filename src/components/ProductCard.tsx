@@ -111,9 +111,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, imgPath }) => {
     addBasketMutation.mutate(basket);
   };
   const toggleFavorite = () => {
+    if (!localStorage.getItem("authToken")) {
+      window.location.href = "/login";
+      return;
+    }
     if (isFavorited) {
       removeFavoriteMutation.mutate(product.productID);
     } else {
+      
       addFavoriteMutation.mutate(product.productID);
     }
   };

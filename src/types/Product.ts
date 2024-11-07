@@ -15,7 +15,7 @@ export type Product = {
 };
 
 export type GetProductsByCategoryRequest = {
-   categoryID : number;
+   slug : string;
    page : number;
    limit : number;
 };

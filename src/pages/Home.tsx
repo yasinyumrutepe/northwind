@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Card, Button } from "antd";
+import { Row, Col, Card, Button} from "antd";
 import { useFetchProducts } from "../hooks/useFetchProducts";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ProductCard from "../components/ProductCard";
@@ -54,20 +54,6 @@ const Home: React.FC = () => {
     fetchProductQuery.data?.data, // Eksik bağımlılık eklendi
   ]);
 
-  const handleSort = (key: string) => {
-    setFilters({
-      ...filters,
-      paginatedRequest: {
-        page: 1,
-        limit: 3,
-      },
-      orberByKey: key,
-    });
-
-    setProducts([]);
-    setHasMore(true);
-    fetchProductQuery.refetch();
-  };
 
   const nextPage = () => {
     if (hasMore) {
@@ -85,26 +71,43 @@ const Home: React.FC = () => {
     setHasMore(true);
     fetchProductQuery.refetch();
   };
+  const handleSort = (key: string) => {
+    setFilters({
+      ...filters,
+      paginatedRequest: {
+        page: 1,
+        limit: 3,
+      },
+      orberByKey: key,
+    });
 
+    setProducts([]);
+    setHasMore(true);
+    fetchProductQuery.refetch();
+  };
   
   return (
+  
     <InfiniteScroll
       dataLength={products.length}
       next={nextPage}
       hasMore={hasMore}
       loader={<p>Product Loading...</p>}
     >
-      <div style={{ padding: "20px" }}>
+      <div >
         <Row gutter={[12, 24]}>
           <Col span={24}>
-            <CarouselComponent />
+            {/* <CarouselComponent /> */}
           </Col>
+          <Row>
+            <Col offset={1}  span={5}>
           <FilterComponent
             filters={filters}
             setFilters={setFilters}
             handleFilter={handleFilter}
           />
-          <Col span={18}>
+          </Col>
+          <Col span={17}  >
             <Row>
               <Col span={24}>
                 <Card>
@@ -141,9 +144,11 @@ const Home: React.FC = () => {
               ))}
             </Row>
           </Col>
+          </Row>
         </Row>
       </div>
     </InfiniteScroll>
+ 
   );
 };
 

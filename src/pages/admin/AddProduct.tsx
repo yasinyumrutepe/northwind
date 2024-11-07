@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { Form, Input, Button, Select, Upload, Row, Col,  Card } from 'antd';
-import { createProduct } from '../../services/ProductService';
+import { Form, Input, Button, Upload, Row, Col, Card, Select } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { useRecoilValue } from 'recoil';
-import { categoryState } from '../../state/CategoryState';
-import { useFetchAuthorization } from '../../hooks/useFetchAuthorization';
-import Loading from '../../components/Loading';
+import { createProduct } from '../../services/ProductService';
+import { useMutation } from '@tanstack/react-query';
 import { errorNotification, successNotification } from '../../config/notification';
+import { useFetchCategories } from '../../hooks/useFetchCategories';
+import { Category } from '../../types/Category';
+import { VariantType } from '../../types/Variant';
+import { useFetchVariants } from '../../hooks/useFetchColor';
 
 const { Option } = Select;
 
 const AddProduct: React.FC = () => {
-  const categories = useRecoilValue(categoryState);
-  const [fileList, setFileList] = useState<any[]>([]); // Resimleri tutmak için state
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [variant, setVariant] = useState<VariantType[]>([]);
+  const [fileList, setFileList] = useState<any[]>([]);
+  const [selectedSize, setSelectedSize] = useState<number[]>([]); 
+  const [selectedColor, setSelectedColor] = useState<number[]>([]);  // Added color state
+  const fetchCategory = useFetchCategories();
+  const variantQuery = useFetchVariants();
 
   const addProductMutation = useMutation({
     mutationFn: createProduct,
@@ -21,43 +26,73 @@ const AddProduct: React.FC = () => {
       successNotification('Product Added', `Product ${newProduct.productName} has been added!`);
     },
     onError: () => {
-     errorNotification('An error occurred', 'An error occurred while adding the product');
+      errorNotification('An error occurred', 'An error occurred while adding the product');
     },
   });
-  const isAuthorized = useFetchAuthorization();
-  if (isAuthorized.isLoading) {
-    return <Loading />;
-  }
+
+  React.useEffect(() => {
+    if (fetchCategory.isSuccess && fetchCategory.data.data) {
+      setCategories(fetchCategory.data.data);
+    }
+    if (variantQuery.isSuccess && variantQuery.data) {
+      setVariant(variantQuery.data);
+    }
+  }, [fetchCategory.isSuccess, fetchCategory.data, variantQuery.isSuccess, variantQuery.data]);
 
   const handleUploadChange = ({ fileList }: any) => {
     setFileList(fileList);
   };
 
   const onFinish = (values: any) => {
+
+    if (fileList.length === 0) {
+      errorNotification('No Image', 'Please upload at least one image');
+      return;
+    }
+
+    if (selectedSize.length === 0) {
+      errorNotification('No Size', 'Please select at least one size');
+      return;
+    }
+
+    if (selectedColor.length === 0) {
+      errorNotification('No Color', 'Please select at least one color');
+      return;
+    }
+
+
     const formData = new FormData();
     formData.append('productName', values.productName);
     formData.append('categoryID', values.category);
     formData.append('unitPrice', values.unitPrice);
     formData.append('stock', values.stock);
     formData.append('description', values.description);
+    formData.append('size', selectedSize.join(','));
+    formData.append('color', selectedColor.join(',')); 
     fileList.forEach((file) => {
-      formData.append('images', file.originFileObj); 
+      formData.append('images', file.originFileObj);
     });
-  
-    addProductMutation.mutate(formData); 
+    addProductMutation.mutate(formData);
   };
-  
+
+  const handleSizeChange = (value: number) => {
+    const selectedVariantID = variant.find((v) => v.variantID === value)?.variantID;
+    if (selectedVariantID) {
+      setSelectedSize(
+        selectedSize.includes(value)
+          ? selectedSize.filter((size) => size !== value)
+          : [...selectedSize, value]
+      );
+    }
+  };
+
 
   return (
     <Card title="Add Product" style={{ padding: '20px' }}>
       <Button type="primary" style={{ marginBottom: '10px' }} href="/admin/products">
         Back to Products
       </Button>
-      <Form
-        layout="vertical"
-        onFinish={onFinish}
-        style={{ maxWidth: '100%', margin: '0' }}
-      >
+      <Form layout="vertical" onFinish={onFinish} style={{ maxWidth: '100%', margin: '0' }}>
         <Row gutter={16}>
           <Col span={8}>
             <Form.Item
@@ -68,9 +103,9 @@ const AddProduct: React.FC = () => {
             >
               <Upload
                 listType="picture-card"
-                beforeUpload={() => false} 
-                fileList={fileList} 
-                onChange={handleUploadChange} 
+                beforeUpload={() => false}
+                fileList={fileList}
+                onChange={handleUploadChange}
                 accept="image/*"
               >
                 <Button icon={<UploadOutlined />}>Upload Images</Button>
@@ -92,11 +127,22 @@ const AddProduct: React.FC = () => {
               rules={[{ required: true, message: 'Please select a category!' }]}
             >
               <Select placeholder="Select Category">
-                {categories.map((category) => (
-                  <Option key={category.categoryID} value={category.categoryID}>
-                    {category.categoryName}
-                  </Option>
-                ))}
+                {categories
+                  .filter((category) => category.mainCategoryID === 0)
+                  .map((mainCategory) => (
+                    <React.Fragment key={mainCategory.categoryID}>
+                      <Option key={mainCategory.categoryID} value={mainCategory.categoryID}>
+                        {mainCategory.categoryName}
+                      </Option>
+                      {categories
+                        .filter((subCategory) => subCategory.mainCategoryID === mainCategory.categoryID)
+                        .map((subCategory) => (
+                          <Option key={subCategory.categoryID} value={subCategory.categoryID}>
+                            &nbsp;&nbsp;&nbsp;{subCategory.categoryName}
+                          </Option>
+                        ))}
+                    </React.Fragment>
+                  ))}
               </Select>
             </Form.Item>
 
@@ -122,6 +168,40 @@ const AddProduct: React.FC = () => {
               rules={[{ required: true, message: 'Please enter the product description!' }]}
             >
               <Input.TextArea placeholder="Product Description" rows={4} />
+            </Form.Item>
+
+            {/* Size Selection */}
+            <Form.Item label="Select Size">
+              <Row gutter={8}>
+                {variant
+                  .filter((v) => v.variantGroupName === 'Size')
+                  .map((size) => (
+                    <Col key={size.variantID}>
+                      <Button
+                        type={selectedSize.includes(size.variantID) ? 'primary' : 'default'}
+                        onClick={() => handleSizeChange(size.variantID)}
+                        style={{ width: '80px' }}
+                      >
+                        {size.variantName}
+                      </Button>
+                    </Col>
+                  ))}
+              </Row>
+            </Form.Item>
+
+            <Form.Item label="Select Color">
+              <Select
+                placeholder="Select Color"
+                onChange={(value) => setSelectedColor([value])}
+              >
+                {variant
+                  .filter((v) => v.variantGroupName === 'Color')
+                  .map((color) => (
+                    <Option key={color.variantID} value={color.variantID} style={{ backgroundColor: color.hexCode }}> 
+                      {color.variantName}
+                    </Option>
+                  ))}
+              </Select>
             </Form.Item>
 
             <Form.Item>

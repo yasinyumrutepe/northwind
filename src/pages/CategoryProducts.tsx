@@ -7,11 +7,10 @@ import { useFetchProductsByCategory } from "../hooks/useFetchProducts";
 import { errorNotification } from "../config/notification";
 
 const CategoryProducts = () => {
-  const { categoryid } = useParams();
-  const categoryID = Number(categoryid);
+  const { slug } = useParams();
 
   const productsByCategoryQuery = useFetchProductsByCategory({
-    categoryID: categoryID,
+    slug: slug?.toString() || "",
     page: 1,
     limit: 30,
   });

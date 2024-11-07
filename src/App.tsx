@@ -3,6 +3,7 @@ import { ConfigProvider } from "antd";
 import { AppRouter } from "./router/AppRouter";
 import { RecoilRoot } from "recoil";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import './styles/global.css';
 
 const queryClient = new QueryClient();
 
