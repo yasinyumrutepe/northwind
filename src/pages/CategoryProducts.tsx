@@ -5,6 +5,7 @@ import { Product } from "../types/Product";
 import ProductCard from "../components/ProductCard";
 import { useFetchProductsByCategory } from "../hooks/useFetchProducts";
 import { errorNotification } from "../config/notification";
+import FilterComponent from "../components/Filter";
 
 const CategoryProducts = () => {
   const { slug } = useParams();
@@ -28,7 +29,23 @@ const CategoryProducts = () => {
     return (
       <div style={{ padding: "20px" }}>
         <Row gutter={[12, 24]}>
-         
+          <Col span={6}>
+                <FilterComponent filters={{
+              paginatedRequest: {
+                page: 0,
+                limit: 0
+              },
+              orberByKey: "",
+              productFilterKeys: {
+                categories: undefined,
+                minPrice: undefined,
+                maxPrice: undefined,
+                colors: undefined,
+                sizes: undefined,
+                ratings: undefined
+              }
+            }} setFilters={undefined} handleFilter={undefined} />
+            </Col>
           <Col span={18} flex={"auto"}>
             <Row>
               {productsByCategoryQuery.data?.data?.map((product: Product) => (

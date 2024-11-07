@@ -156,50 +156,75 @@ const FilterComponent: React.FC<FilterProps> = ({
   return (
     <Card title="Filters">
        <Card title="Categories" style={{ marginBottom: '16px' }}>
-      {categories
-        .filter((category) => category.mainCategoryID === 0)
-        .map((mainCategory) => (
-          <div key={mainCategory.categoryID} style={{ marginBottom: '8px' }}>
-            {/* Ana Kategori */}
-            <Col>
-              <Checkbox
-                onChange={() => handlerCategoryChange(mainCategory.categoryID)}
-                checked={
-                  tempFilters.productFilterKeys.categories?.includes(
-                    mainCategory.categoryID
-                  ) || false
-                }
-              >
-                {mainCategory.categoryName}
-              </Checkbox>
-            </Col>
+       {categories
+  .filter((category) => category.mainCategoryID === 0)
+  .map((mainCategory) => (
+    <div key={mainCategory.categoryID} style={{ marginBottom: '8px' }}>
+      {/* Ana Kategori */}
+      <Col>
+        <Checkbox
+          onChange={() => handlerCategoryChange(mainCategory.categoryID)}
+          checked={
+            tempFilters.productFilterKeys.categories?.includes(
+              mainCategory.categoryID
+            ) || false
+          }
+        >
+          {mainCategory.categoryName}
+        </Checkbox>
+      </Col>
 
-            {/* Alt Kategoriler */}
-            <div style={{ marginLeft: '20px', marginTop: '8px' }}>
-              {categories
-                .filter(
-                  (subCategory) =>
-                    subCategory.mainCategoryID === mainCategory.categoryID
-                )
-                .map((subCategory) => (
-                  <Col key={subCategory.categoryID}>
-                    <Checkbox
-                      onChange={() =>
-                        handlerCategoryChange(subCategory.categoryID)
-                      }
-                      checked={
-                        tempFilters.productFilterKeys.categories?.includes(
-                          subCategory.categoryID
-                        ) || false
-                      }
-                    >
-                      {subCategory.categoryName}
-                    </Checkbox>
-                  </Col>
-                ))}
+      {/* Alt Kategoriler */}
+      <div style={{ marginLeft: '20px', marginTop: '8px' }}>
+        {categories
+          .filter(
+            (subCategory) =>
+              subCategory.mainCategoryID === mainCategory.categoryID
+          )
+          .map((subCategory) => (
+            <div key={subCategory.categoryID}>
+              <Col>
+                <Checkbox
+                  onChange={() => handlerCategoryChange(subCategory.categoryID)}
+                  checked={
+                    tempFilters.productFilterKeys.categories?.includes(
+                      subCategory.categoryID
+                    ) || false
+                  }
+                >
+                  {subCategory.categoryName}
+                </Checkbox>
+              </Col>
+
+              {/* Alt Kategorinin Altındaki Sub-Sub Kategoriler */}
+              <div style={{ marginLeft: '20px', marginTop: '8px' }}>
+                {categories
+                  .filter(
+                    (subSubCategory) =>
+                      subSubCategory.mainCategoryID === subCategory.categoryID
+                  )
+                  .map((subSubCategory) => (
+                    <Col key={subSubCategory.categoryID}>
+                      <Checkbox
+                        onChange={() =>
+                          handlerCategoryChange(subSubCategory.categoryID)
+                        }
+                        checked={
+                          tempFilters.productFilterKeys.categories?.includes(
+                            subSubCategory.categoryID
+                          ) || false
+                        }
+                      >
+                        {subSubCategory.categoryName}
+                      </Checkbox>
+                    </Col>
+                  ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+      </div>
+    </div>
+  ))}
     </Card>
       <Card title="Price" style={{ marginBottom: "16px" }}>
         <Row>

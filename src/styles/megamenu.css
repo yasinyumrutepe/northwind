@@ -3,7 +3,6 @@ body {
   padding: 0;
   font: 300 14px/18px Roboto;
   overflow-x: hidden;
-
 }
 
 *,
@@ -39,7 +38,6 @@ a:focus {
 .content {
   margin: 0px 0px 0px 0px;
 }
-
 
 .exo-menu > li {
   display: inline-block;
@@ -182,7 +180,6 @@ h4.row.mega-title {
 }
 ul.stander li a {
   padding: 3px 0px;
-
 }
 
 ul.description li {
@@ -365,12 +362,10 @@ a.toggle-menu {
   background: #fff;
   color: white;
   z-index: 1000;
-
 }
-.exo-menu >div {
+.exo-menu > div {
   margin-top: 10px;
   margin-bottom: 10px;
-
 }
 
 .left-menu {
@@ -399,8 +394,8 @@ a.toggle-menu {
   gap: 10px;
 }
 
-.exo-menu > .left-menu, 
-.exo-menu > .center-logo, 
+.exo-menu > .left-menu,
+.exo-menu > .center-logo,
 .exo-menu > .right-menu {
   flex: 1;
 }
@@ -412,7 +407,6 @@ a.toggle-menu {
 .dropdown-toggle {
   cursor: pointer;
 }
-
 
 .dropdown-menu li {
   padding: 8px 20px;
@@ -431,7 +425,6 @@ a.toggle-menu {
 .dropdown:focus .dropdown-menu {
   display: block;
 }
-
 
 .dropdown-menu {
   display: none;
@@ -453,6 +446,10 @@ a.toggle-menu {
   right: auto;
   left: auto;
 }
+.dropdown:hover .dropdown-menu,
+.dropdown:focus-within .dropdown-menu {
+  display: block;
+}
 
 @media (min-width: 767px) {
   .dropdown:hover .dropdown-menu,
@@ -470,4 +467,36 @@ a.toggle-menu {
     width: 100%;
     box-shadow: none;
   }
+}
+.mega-menu {
+  display: none;
+}
+
+.mega-drop-down:hover .mega-menu {
+  display: block;
+}
+
+.mega-menu-wrap {
+  position: absolute;
+  background-color: white;
+  top: 100%;
+  left: 10;
+  width: 100%;
+}
+
+.sub-category {
+  display: none;
+}
+
+.stander li:hover .sub-category {
+  display: block;
+}
+
+.stander li {
+  position: relative;
+}
+
+.stander li a {
+  display: block;
+  padding: 10px;
 }
