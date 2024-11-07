@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Card, Button} from "antd";
+import { Row, Col, Card, Button } from "antd";
 import { useFetchProducts } from "../hooks/useFetchProducts";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ProductCard from "../components/ProductCard";
@@ -7,6 +7,7 @@ import { Product } from "../types/Product";
 import CarouselComponent from "../components/Carousel";
 import { errorNotification } from "../config/notification";
 import FilterComponent from "../components/Filter";
+import Loading from "../components/Loading";
 
 const Home: React.FC = () => {
   const [filters, setFilters] = useState({
@@ -42,7 +43,7 @@ const Home: React.FC = () => {
         setProducts((prev) => [...prev, ...fetchProductQuery.data.data]);
       }
     }
-  
+
     if (fetchProductQuery.isError) {
       setHasMore(false);
       errorNotification("Error", "An error occurred while fetching products");
@@ -53,7 +54,6 @@ const Home: React.FC = () => {
     filters.paginatedRequest.page,
     fetchProductQuery.data?.data, // Eksik bağımlılık eklendi
   ]);
-
 
   const nextPage = () => {
     if (hasMore) {
@@ -85,29 +85,20 @@ const Home: React.FC = () => {
     setHasMore(true);
     fetchProductQuery.refetch();
   };
-  
+
   return (
-  
-    <InfiniteScroll
-      dataLength={products.length}
-      next={nextPage}
-      hasMore={hasMore}
-      loader={<p>Product Loading...</p>}
-    >
-      <div >
-        <Row gutter={[12, 24]}>
-          <Col span={24}>
-            {/* <CarouselComponent /> */}
+    <div>
+      <Row gutter={[12, 24]}>
+        <Col span={24}>{/* <CarouselComponent /> */}</Col>
+        <Row>
+          <Col offset={1} span={5}>
+            <FilterComponent
+              filters={filters}
+              setFilters={setFilters}
+              handleFilter={handleFilter}
+            />
           </Col>
-          <Row>
-            <Col offset={1}  span={5}>
-          <FilterComponent
-            filters={filters}
-            setFilters={setFilters}
-            handleFilter={handleFilter}
-          />
-          </Col>
-          <Col span={17}  >
+          <Col span={17}>
             <Row>
               <Col span={24}>
                 <Card>
@@ -137,18 +128,51 @@ const Home: React.FC = () => {
                   </Button>
                 </Card>
               </Col>
-              {products.map((product: Product) => (
-                <Col key={product.productID} xs={24} sm={16} md={16} lg={8}>
-                  <ProductCard product={product} imgPath={"error"} />
-                </Col>
-              ))}
+              <InfiniteScroll
+                dataLength={products.length}
+                next={nextPage}
+                hasMore={hasMore}
+                loader={
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: "100%",
+                      padding: "20px",
+                    }}
+                  >
+                    <div style={{ textAlign: "center", color: "#333" }}>
+                      <div
+                        className="spinner"
+                        style={{
+                          border: "4px solid #ccc",
+                          borderTop: "4px solid #009fe1",
+                          borderRadius: "50%",
+                          width: "30px",
+                          height: "30px",
+                          animation: "spin 1s linear infinite",
+                          marginBottom: "10px",
+                        }}
+                      />
+                      <span>Loading more items...</span>
+                    </div>
+                  </div>
+                }
+              >
+                <Row>
+                  {products.map((product: Product) => (
+                    <Col key={product.productID} xs={24} sm={16} md={16} lg={8}>
+                      <ProductCard product={product} imgPath={"error"} />
+                    </Col>
+                  ))}
+                </Row>
+              </InfiniteScroll>
             </Row>
           </Col>
-          </Row>
         </Row>
-      </div>
-    </InfiniteScroll>
- 
+      </Row>
+    </div>
   );
 };
 
