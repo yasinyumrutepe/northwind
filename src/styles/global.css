@@ -1,0 +1,57 @@
+/* global.css */
+
+/* Temel kutu modelini düzenleme */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Arial', sans-serif; 
+  color: #333; 
+  background-color: #f8f9fa; 
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Helvetica', sans-serif;
+  color: #444;
+  margin-bottom: 0.5rem;
+}
+
+/* Buton genel stilleri */
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Linkler için varsayılan stil */
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Genel boşluklar */
+.container {
+  padding: 0 15px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 750px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 960px;
+  }
+}

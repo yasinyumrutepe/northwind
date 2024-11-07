@@ -26,24 +26,26 @@ import AdminCampaigns from "../pages/admin/Campaings"
 import AdminCustomers from "../pages/admin/AdminCustomers"
 import AdminCategories from "../pages/admin/AdminCategories"
 import MyFavoriteProducts from "../pages/MyFavoriteProducts"
+import AuthRoute from "./AuthRouter"
 
 
 export const AppRouter :React.FC = () => {
     return (
     <BrowserRouter>
        <Routes>
-       <Route element={<PublicRoute />}>
-       <Route path= "/login" element={<Login/>}/>
-       <Route path="/register" element={<Register/>}/>
+       <Route path="/" element={<PublicRoute />}>
+       <Route path="/" element={<Home/>}/>
+       <Route path= "/product/:productid" element={<ProductDetail/>}/>
+       <Route path= "/category/:slug" element={<CategoryProducts/>}/>
+       <Route path="/basket" element= {<Basket/>}/>
        </Route>
-        <Route path="/" element={<PrivateRoute  />}>
-        <Route path="/" element={<Home/>}/>
-       
-        <Route path= "/products/:categoryid" element={<CategoryProducts/>}/>
-        <Route path= "/product/:productid" element={<ProductDetail/>}/>
+      <Route element={<AuthRoute/>}>
+      <Route path= "/login" element={<Login/>}/>
+      <Route path="/register" element={<Register/>}/>
+      </Route>
+        <Route element={<PrivateRoute  />}>
         <Route path="/myfavoriteproducts" element={<MyFavoriteProducts/>}/>
         <Route path= "/orders" element={<Orders/>}/>
-        <Route path="/basket" element= {<Basket/>}/>
         <Route path="/profile" element={<ProfilePage/>}/>
         <Route path="/orders/checkout" element= {<Checkout/>}/>
         <Route path="/orders/checkout/success" element= {<ConfirmPayment/>}/>

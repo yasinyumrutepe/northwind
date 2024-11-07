@@ -164,7 +164,7 @@ const Basket: React.FC = () => {
                   style={{ display: "flex", justifyContent: "space-between" }}
                 >
                   <Button href="/">Continue shopping</Button>
-                  <Button href="/orders/checkout" type="primary">
+                  <Button href="/orders/checkout" type="primary"    disabled={basketItems?.items?.length === 0}>
                     Make Purchase
                   </Button>
                 </div>
@@ -182,8 +182,6 @@ const Basket: React.FC = () => {
           </Col>
 
           <Col xs={24} lg={8}>
-            {" "}
-            {/* Responsive genişlik ayarı */}
             <Card title="Have coupon?" bordered={false}>
               <Row gutter={8}>
                 <Col span={16}>
@@ -194,7 +192,7 @@ const Basket: React.FC = () => {
                   />
                 </Col>
                 <Col span={8}>
-                  <Button type="primary" block onClick={applyDiscount}>
+                  <Button type="primary" block onClick={applyDiscount}    disabled={basketItems?.items?.length === 0}>
                     Apply
                   </Button>
                 </Col>
@@ -208,7 +206,7 @@ const Basket: React.FC = () => {
               <div>
                 <div style={{ fontSize: "16px", margin: "2px" }}>
                   Total price:{" "}
-                  {basketItems?.items.reduce(
+                  {basketItems?.items?.reduce(
                     (total, item) => total + item.unitPrice * item.quantity,
                     0
                   )}{" "}
@@ -222,7 +220,7 @@ const Basket: React.FC = () => {
                     {basketItems?.discount
                       ? basketItems.discount.isPercent
                         ? (
-                            (basketItems?.items.reduce(
+                            (basketItems?.items?.reduce(
                               (total, item) =>
                                 total + item.unitPrice * item.quantity,
                               0
@@ -230,7 +228,7 @@ const Basket: React.FC = () => {
                               basketItems.discount.discountAmount) /
                             100
                           ).toFixed(2)
-                        : basketItems.discount.discountAmount.toFixed(2)
+                        : basketItems.discount?.discountAmount?.toFixed(2)
                       : (0).toFixed(2)}
                     TL
                   </div>
@@ -239,7 +237,7 @@ const Basket: React.FC = () => {
                 <Divider />
                 <div>
                   <Title level={4}>
-                    Total: {basketItems?.totalPrice.toFixed(2)} TL
+                    Total: {basketItems?.totalPrice?.toFixed(2)} TL
                   </Title>
                 </div>
               </div>
@@ -248,6 +246,7 @@ const Basket: React.FC = () => {
                   href="/orders/checkout"
                   type="primary"
                   block
+                  disabled={basketItems?.items?.length === 0}
                   style={{ marginTop: "16px" }}
                 >
                   Make Purchase

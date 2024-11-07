@@ -37,12 +37,12 @@ export const fetchProductsByCategory = async (
 ) => {
   if (!request.page || !request.limit) {
     const response = await api.get<Paginate<Product[]>>(
-      `/Products/category?categoryID=${request.categoryID}`
+      `/Products/category?slug=${request.slug}`
     );
     return response.data;
   }
   const response = await api.get<Paginate<Product[]>>(
-    `/Products/category?categoryID=${request.categoryID}&page=${request.page}&limit=${request.limit}`
+    `/Products/category?slug=${request.slug}&page=${request.page}&limit=${request.limit}`
   );
   return response.data;
 };

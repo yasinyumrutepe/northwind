@@ -225,14 +225,21 @@ const UpdateProduct: React.FC = () => {
                 ]}
               >
                 <Select placeholder="Select category">
-                  <Select.Option value={0}>Select category</Select.Option>
-                  {categories.map((category) => (
-                    <Option
-                      key={category.categoryID}
-                      value={category.categoryID}
-                    >
-                      {category.categoryName}
-                    </Option>
+                  {categories
+                  .filter((category) => category.mainCategoryID === 0)
+                  .map((mainCategory) => (
+                    <React.Fragment key={mainCategory.categoryID}>
+                      <Option key={mainCategory.categoryID} value={mainCategory.categoryID}>
+                        {mainCategory.categoryName}
+                      </Option>
+                      {categories
+                        .filter((subCategory) => subCategory.mainCategoryID === mainCategory.categoryID)
+                        .map((subCategory) => (
+                          <Option key={subCategory.categoryID} value={subCategory.categoryID}>
+                            &nbsp;&nbsp;&nbsp;{subCategory.categoryName}
+                          </Option>
+                        ))}
+                    </React.Fragment>
                   ))}
                 </Select>
               </Form.Item>

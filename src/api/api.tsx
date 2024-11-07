@@ -19,7 +19,7 @@ api.interceptors.request.use(
     
     const token = localStorage.getItem('authToken');
     if (!token) {
-      return Promise.reject(new Error('No token available')); 
+      return config;
     }
     config.headers.Authorization = `Bearer ${token}`;
     return config;

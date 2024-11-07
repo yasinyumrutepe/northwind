@@ -4,6 +4,7 @@ export type VariantType = {
     variantID: number;
     variantGroupName: string;
     variantName: string;
+    hexCode: string;
 }
 
 export type FilterType = {
