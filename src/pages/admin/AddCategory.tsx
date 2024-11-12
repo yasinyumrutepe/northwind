@@ -82,7 +82,7 @@ const AddCategory = () => {
               {fields.map((field) => {
                 const mainCategory = form.getFieldValue(['items', field.name, 'categoryID']);
                 const subCategories = categories.filter(
-                  (cat) => cat.mainCategoryID === mainCategory
+                  (cat) => cat.parent_ID === mainCategory
                 );
 
                 return (
@@ -114,7 +114,7 @@ const AddCategory = () => {
                             style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}
                           >
                             <Input
-                              defaultValue={subCat.categoryName}
+                              defaultValue={subCat.name}
                               placeholder="Sub Category Name"
                               style={{ width: '80%' }}
                               readOnly

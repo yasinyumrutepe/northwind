@@ -155,77 +155,74 @@ const FilterComponent: React.FC<FilterProps> = ({
 
   return (
     <Card title="Filters">
-       <Card title="Categories" style={{ marginBottom: '16px' }}>
-       {categories
-  .filter((category) => category.mainCategoryID === 0)
-  .map((mainCategory) => (
-    <div key={mainCategory.categoryID} style={{ marginBottom: '8px' }}>
-      {/* Ana Kategori */}
-      <Col>
-        <Checkbox
-          onChange={() => handlerCategoryChange(mainCategory.categoryID)}
-          checked={
-            tempFilters.productFilterKeys.categories?.includes(
-              mainCategory.categoryID
-            ) || false
-          }
-        >
-          {mainCategory.categoryName}
-        </Checkbox>
-      </Col>
+      <Card title="Categories"  style={{ marginBottom: '16px', maxHeight: '300px', overflowY: 'auto' }}>
+  {categories
+    .filter((category) => category.parent_ID === null) // Main Categories
+    .map((mainCategory) => (
+      <div key={mainCategory.categoryID} style={{ marginBottom: '8px' }}>
+        {/* Main Category */}
+        <Col>
+          <Checkbox
+            onChange={() => handlerCategoryChange(mainCategory.categoryID)}
+            checked={
+              tempFilters.productFilterKeys.categories?.includes(
+                mainCategory.categoryID
+              ) || false
+            }
+          >
+            {mainCategory.name}
+          </Checkbox>
+        </Col>
 
-      {/* Alt Kategoriler */}
-      <div style={{ marginLeft: '20px', marginTop: '8px' }}>
-        {categories
-          .filter(
-            (subCategory) =>
-              subCategory.mainCategoryID === mainCategory.categoryID
-          )
-          .map((subCategory) => (
-            <div key={subCategory.categoryID}>
-              <Col>
-                <Checkbox
-                  onChange={() => handlerCategoryChange(subCategory.categoryID)}
-                  checked={
-                    tempFilters.productFilterKeys.categories?.includes(
-                      subCategory.categoryID
-                    ) || false
-                  }
-                >
-                  {subCategory.categoryName}
-                </Checkbox>
-              </Col>
+        {/* Subcategories */}
+        <div style={{ marginLeft: '20px', marginTop: '8px' }}>
+          {categories
+            .filter((subCategory) => subCategory.parent_ID === mainCategory.categoryID)
+            .map((subCategory) => (
+              <div key={subCategory.categoryID}>
+                <Col>
+                  <Checkbox
+                    onChange={() => handlerCategoryChange(subCategory.categoryID)}
+                    checked={
+                      tempFilters.productFilterKeys.categories?.includes(
+                        subCategory.categoryID
+                      ) || false
+                    }
+                  >
+                    {subCategory.name}
+                  </Checkbox>
+                </Col>
 
-              {/* Alt Kategorinin Altındaki Sub-Sub Kategoriler */}
-              <div style={{ marginLeft: '20px', marginTop: '8px' }}>
-                {categories
-                  .filter(
-                    (subSubCategory) =>
-                      subSubCategory.mainCategoryID === subCategory.categoryID
-                  )
-                  .map((subSubCategory) => (
-                    <Col key={subSubCategory.categoryID}>
-                      <Checkbox
-                        onChange={() =>
-                          handlerCategoryChange(subSubCategory.categoryID)
-                        }
-                        checked={
-                          tempFilters.productFilterKeys.categories?.includes(
-                            subSubCategory.categoryID
-                          ) || false
-                        }
-                      >
-                        {subSubCategory.categoryName}
-                      </Checkbox>
-                    </Col>
-                  ))}
+                {/* Sub-Subcategories */}
+                <div style={{ marginLeft: '20px', marginTop: '8px' }}>
+                  {categories
+                    .filter(
+                      (subSubCategory) =>
+                        subSubCategory.parent_ID === subCategory.categoryID
+                    )
+                    .map((subSubCategory) => (
+                      <Col key={subSubCategory.categoryID}>
+                        <Checkbox
+                          onChange={() =>
+                            handlerCategoryChange(subSubCategory.categoryID)
+                          }
+                          checked={
+                            tempFilters.productFilterKeys.categories?.includes(
+                              subSubCategory.categoryID
+                            ) || false
+                          }
+                        >
+                          {subSubCategory.name}
+                        </Checkbox>
+                      </Col>
+                    ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+        </div>
       </div>
-    </div>
-  ))}
-    </Card>
+    ))}
+</Card>
       <Card title="Price" style={{ marginBottom: "16px" }}>
         <Row>
           <Col span={12} style={{ padding: "10px" }}>

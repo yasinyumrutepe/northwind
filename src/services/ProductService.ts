@@ -1,18 +1,16 @@
 import api from "../api/api";
 import { Paginate } from "../types/Paginate";
-import { GetProductsByCategoryRequest, Product } from "../types/Product";
+import { GetProductsByCategoryRequest, Product, UpdateProductRequest } from "../types/Product";
 import { FilterType } from "../types/Variant";
 
 export const fetchAllProducts = async (filters?: FilterType) => {
-  let url = `/Products?paginatedRequest.page=${filters?.paginatedRequest.page || 1}&paginatedRequest.limit=${filters?.paginatedRequest.limit || 10}`;
+  let url = `/Products?paginatedRequest.page=${filters?.paginatedRequest.page || 1}&paginatedRequest.limit=${filters?.paginatedRequest.limit || 20}`;
 
   const addQueryParam = (key: string, value: any) => {
     if (value !== undefined && value !== null && value !== '') {
       url += `&${key}=${encodeURIComponent(value)}`;
     }
   };
-
-  // Filtreleri ekleme
   addQueryParam('orderByKey', filters?.orberByKey);
   addQueryParam('productFilterKeys.categories', filters?.productFilterKeys.categories?.join(','));
   addQueryParam('productFilterKeys.minPrice', filters?.productFilterKeys.minPrice);
@@ -56,7 +54,7 @@ export const createProduct = async (product: any) => {
   return response.data;
 };
 
-export const updateProduct = async ( product: Product) => {
+export const updateProduct = async ( product: UpdateProductRequest) => {
   const response = await api.put<Product>(`/Products`, product);
   return response.data;
 };

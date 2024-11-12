@@ -1,6 +1,7 @@
 import { Category } from './Category';
 import { ProductFavorite } from './ProductFavorite';
 import { ProductReview } from './ProductReview';
+import { VariantType } from './Variant';
 export type Product = {
    productID : number;
    productName : string;
@@ -12,6 +13,20 @@ export type Product = {
    productImages? : ProductImage[];
    productReviews? : ProductReview[];
    productFavorites? : ProductFavorite[];
+   productVariants? : ProductVariant[];
+   productCategories? : Category[];
+};
+
+
+export type UpdateProductRequest = {
+   productID : number;
+   productName : string;
+   categories : number[];
+   unitPrice : number;
+   description : string;
+   unitsInStock : number;
+   sizes : number[];
+   colors : number;
 };
 
 export type GetProductsByCategoryRequest = {
@@ -30,9 +45,17 @@ export type ProductImage = {
 
 export type CreateProduct = {
    productName : string;
-   categoryID : number;
+   categories : number[];
    unitPrice : number;
    description : string;
+};
+
+
+export type ProductVariant = {
+   productVariantID : number;
+   productID : number;
+   variantID : number;
+   variant : VariantType;
 };
 
 
