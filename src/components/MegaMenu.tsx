@@ -54,12 +54,13 @@ const MegaMenu: React.FC<ComponentProps> = ({ category }) => {
   const renderSubSubCategories = (subHoveredCategoryId: number) => (
     <ul className="sub-category">
       {category.map((subSubItem) => {
-        
-        if (subSubItem.mainCategoryID === subHoveredCategoryId) {
+     
+        if (subSubItem.parent_ID === subHoveredCategoryId) {
+          console.log(subSubItem.parent_ID, subHoveredCategoryId);
           return (
             <li key={subSubItem.categoryID}>
               <a href={'/category/' + subSubItem.slug}>
-                {subSubItem.categoryName}
+                {subSubItem.name}
               </a>
             </li>
           );
@@ -81,7 +82,7 @@ const MegaMenu: React.FC<ComponentProps> = ({ category }) => {
             <Col span={8}>
               <div className="left-menu">
                 {category.map((item) => {
-                  if (item.mainCategoryID === 0) {
+                  if (item.parent_ID === 0) {
                     return (
                       <li
                         className="mega-drop-down"
@@ -90,7 +91,7 @@ const MegaMenu: React.FC<ComponentProps> = ({ category }) => {
                         onMouseLeave={() => hoverCategory(null)}
                       >
                         <a href={'/category/' + item.slug}>
-                          <i className="fa fa-list"></i> {item.categoryName}
+                          <i className="fa fa-list"></i> {item.name}
                         </a>
                         {hoveredCategoryId === item.categoryID && (
                           <div className="animated fadeIn mega-menu">
@@ -99,7 +100,7 @@ const MegaMenu: React.FC<ComponentProps> = ({ category }) => {
                                 <Col md={8}>
                                   <ul className="stander">
                                     {category.map((subItem) => {
-                                      if (subItem.mainCategoryID === item.categoryID) {
+                                      if (subItem.parent_ID === item.categoryID) {
                                         return (
                                           <li
                                             key={subItem.categoryID}
@@ -107,7 +108,7 @@ const MegaMenu: React.FC<ComponentProps> = ({ category }) => {
                                             onMouseLeave={() => subHoveredCategory(null)}
                                           >
                                             <a href={'/category/' + subItem.slug}>
-                                              {subItem.categoryName}
+                                              {subItem.name}
                                             </a>
                                           </li>
                                         );

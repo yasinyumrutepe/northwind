@@ -74,7 +74,7 @@ const ProductDetail: React.FC = () => {
           productID: product?.productID ?? 0,
           productName: product?.productName ?? '',
           categoryID: product?.categoryID ?? 0,
-          categoryName: product?.category?.categoryName ?? 'Category',
+          categoryName: product?.category?.name ?? 'Category',
           unitPrice: product?.unitPrice ?? 0,
           quantity: 1,
           totalPrice: product?.unitPrice ?? 0,
@@ -151,7 +151,7 @@ const ProductDetail: React.FC = () => {
           <div style={{ padding: '20px', minHeight: '300px' }}>
             <Title level={2}>{product?.productName}</Title>
             <Rate  value={productRates} disabled allowHalf />
-            <Text type="secondary">Category: {product?.category?.categoryName}</Text>
+            <Text type="secondary">Category: {product?.category?.name}</Text>
             <Divider />
             <Title level={3} style={{ color: '#ff4d4f' }}>{product?.unitPrice} ₺</Title>
             <Paragraph>{product?.description}</Paragraph>

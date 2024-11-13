@@ -98,7 +98,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, imgPath }) => {
           productID: product.productID,
           productName: product.productName,
           categoryID: product.categoryID,
-          categoryName: product.category?.categoryName ?? "Category",
+          categoryName: product.category?.name ?? "Category",
           unitPrice: product.unitPrice,
           quantity: 1,
           totalPrice: product.unitPrice,
@@ -137,6 +137,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, imgPath }) => {
             src={product.productImages?.[0]?.imagePath ?? imgPath}
             className=""
             alt="..."
+            onClick={goToProductDetail}
           />
         }
       >
@@ -148,6 +149,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, imgPath }) => {
             overflow: "hidden",
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
+            cursor: "pointer",
           }}
         >
           {product.productName}
