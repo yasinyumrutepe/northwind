@@ -20,5 +20,6 @@ export type FilterType = {
         colors: number[] | undefined,
         sizes: number[] | undefined,
         ratings: number[] | undefined
+        slug:string|undefined
       }
 }

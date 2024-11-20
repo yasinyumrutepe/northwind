@@ -79,7 +79,7 @@ const StripeTest: React.FC<StripeProps> = ({ totalPrice }) => {
       paymentMethodTypes: ["card"],
     };
     intentMutation.mutate(mutationData);
-  }, [intentMutation, totalPrice]);
+  }, [ totalPrice]);
   
   const options = {
     clientSecret: clientSecret,

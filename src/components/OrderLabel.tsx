@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { OrderDetailProps } from "../types/Order";
 import OrderTimeline from "./OrderTimeline";
 
-
 const OrderLabel: React.FC<OrderDetailProps> = ({ order }) => {
     const [orderProductsImage, setOrderProductsImage] = useState<string[]>([]);
    
@@ -23,8 +22,8 @@ const OrderLabel: React.FC<OrderDetailProps> = ({ order }) => {
     const orderDate = order.orderDate ? new Date(order.orderDate) : null;
 
     return (
-        <Row justify="space-between" align="middle" style={{ padding: "16px",  marginBottom: "16px", rowGap: "16px" }}>
-            <Col>
+        <Row justify="space-between" align="middle" gutter={[16, 16]} style={{ padding: "16px", marginBottom: "16px", rowGap: "16px" }}>
+            <Col xs={24} sm={6} md={6}>
                 <Row gutter={8}>
                     {orderProductsImage.slice(0, 2).map((image, idx) => (
                         <Col key={idx}>
@@ -64,18 +63,18 @@ const OrderLabel: React.FC<OrderDetailProps> = ({ order }) => {
                 </Row>
             </Col>
 
-            <Col>
+            <Col xs={24} sm={8} md={6}>
                 <span style={{ fontSize: "14px", fontWeight: 400, color: "#7d7d7d" }}>
                     Order Number: <strong style={{ fontSize: "16px", fontWeight: 500, color: "#333" }}>{order.orderNumber}</strong>
                 </span>
             </Col>
 
-            <Col>
-            <OrderTimeline orderStatuses={order.orderStatuses} /> 
+            <Col xs={24} sm={6} md={6}>
+                <OrderTimeline orderStatuses={order.orderStatuses} /> 
             </Col>
 
-            <Col style={{ textAlign: "right" }}>
-                <p style={{ margin: 0, fontSize: "14px", color: "#7d7d7d" }}> {orderDate ? orderDate.toLocaleDateString() : 'Tarih yok'}</p>
+            <Col xs={24} sm={4} md={6} style={{ textAlign: "right" }}>
+                <p style={{ margin: 0, fontSize: "14px", color: "#7d7d7d" }}>{orderDate ? orderDate.toLocaleDateString() : 'Tarih yok'}</p>
                 <p style={{ margin: 0, fontSize: "16px", fontWeight: 500, color: "#27ae60" }}>{order.totalPrice} TL</p>
             </Col>
         </Row>

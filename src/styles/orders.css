@@ -1,0 +1,24 @@
+.orders-container {
+    padding: 24px;
+    background-color: #fff;
+  }
+  
+  .order-collapse {
+    margin: 10px;
+  }
+  
+  @media (max-width: 768px) {
+    .orders-container {
+      padding: 10px;
+    }
+  
+    .order-collapse {
+      margin: 5px;
+    }
+  
+    h1 {
+      font-size: 16px;
+      text-align: center;
+    }
+  }
+  

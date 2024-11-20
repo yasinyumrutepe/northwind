@@ -30,6 +30,9 @@ const { Title, Text } = Typography;
 const Basket: React.FC = () => {
   const [basketItems, setBasketItems] = useState<BasketResponse>() ?? [];
   const [discountCode, setDiscountCode] = useState<string>("");
+  const [disabled,setDisabled]=useState<boolean>(false);
+  const [isLogin, setIsLogin] = useState<boolean>(false);
+
   const basketQuery = useQuery({
     queryKey: ["basket"],
     queryFn: () => fetchAllBaskets(),
@@ -72,13 +75,20 @@ const Basket: React.FC = () => {
         setDiscountCode(basket.discount.campaignName);
       }
     },
-
     onError: () => {
       errorNotification("Error", "An error occurred while applying discount");
     },
   });
+  
   useEffect(() => {
+    if (localStorage.getItem("authToken")) {
+      setIsLogin(true);
+    }
+
     if (basketQuery.isSuccess) {
+      if(basketQuery.data == null){
+        setDisabled(true)
+      }
       if (basketQuery.data.discount == null) {
         setDiscountCode("");
       } else {
@@ -99,6 +109,12 @@ const Basket: React.FC = () => {
 
   const handleRemove = (id: number) => {
     deleteBasketMutation.mutate(id);
+  };
+
+  const makePurchase = () => {
+    isLogin
+      ? (window.location.href = "/orders/checkout")
+      : (window.location.href = "/login");
   };
 
   const columns = [
@@ -138,7 +154,9 @@ const Basket: React.FC = () => {
       title: "",
       render: (_: any, record: BasketItem) => (
         <div>
-          <Button icon={<HeartOutlined />} style={{ marginRight: "8px" }} />
+          {isLogin ? (
+            <Button icon={<HeartOutlined />} style={{ marginRight: "8px" }} />
+          ) : null}
           <Button
             danger
             icon={<DeleteOutlined />}
@@ -150,21 +168,30 @@ const Basket: React.FC = () => {
   ];
 
   return (
-    <div style={{ padding: "0 100px" }}>
+    <div style={{ padding: "0 10px", maxWidth: "100%" }}>
       <Card>
-        <Row gutter={16}>
-          <Col xs={24} lg={16}>
+        <Row gutter={[16, 16]}>
+          <Col xs={24} md={16}>
             <Table<BasketItem>
               columns={columns}
               dataSource={basketItems?.items}
               rowKey="productID"
               pagination={false}
+              scroll={{ x: true }}
               footer={() => (
                 <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    flexWrap: "wrap",
+                  }}
                 >
                   <Button href="/">Continue shopping</Button>
-                  <Button href="/orders/checkout" type="primary"    disabled={basketItems?.items?.length === 0}>
+                  <Button
+                    onClick={makePurchase}
+                    type="primary"
+                    disabled={basketItems?.items?.length === 0}
+                  >
                     Make Purchase
                   </Button>
                 </div>
@@ -175,13 +202,13 @@ const Basket: React.FC = () => {
                 marginTop: "16px",
                 backgroundColor: "#e6fffb",
                 padding: "10px",
+                textAlign: "center",
               }}
             >
               <Text type="success">Free Delivery within 1-2 weeks</Text>
             </div>
           </Col>
-
-          <Col xs={24} lg={8}>
+          <Col xs={24} md={8}>
             <Card title="Have coupon?" bordered={false}>
               <Row gutter={8}>
                 <Col span={16}>
@@ -192,17 +219,18 @@ const Basket: React.FC = () => {
                   />
                 </Col>
                 <Col span={8}>
-                  <Button type="primary" block onClick={applyDiscount}    disabled={basketItems?.items?.length === 0}>
+                  <Button
+                    type="primary"
+                    block
+                    onClick={applyDiscount}
+                    disabled={basketItems?.items?.length === 0}
+                  >
                     Apply
                   </Button>
                 </Col>
               </Row>
             </Card>
-            <Card
-              title="Order Summary"
-              bordered={false}
-              style={{ marginTop: "20px" }}
-            >
+            <Card title="Order Summary" bordered={false} style={{ marginTop: "20px" }}>
               <div>
                 <div style={{ fontSize: "16px", margin: "2px" }}>
                   Total price:{" "}
@@ -214,7 +242,11 @@ const Basket: React.FC = () => {
                 </div>
                 {basketItems?.discount != null ? (
                   <div
-                    style={{ fontSize: "16px", margin: "2px", color: "green" }}
+                    style={{
+                      fontSize: "16px",
+                      margin: "2px",
+                      color: "green",
+                    }}
                   >
                     Discount: -
                     {basketItems?.discount
@@ -241,12 +273,13 @@ const Basket: React.FC = () => {
                   </Title>
                 </div>
               </div>
-              <Col span={12}>
+              <Col span={24}>
+              
                 <Button
-                  href="/orders/checkout"
+                  onClick={makePurchase}
                   type="primary"
                   block
-                  disabled={basketItems?.items?.length === 0}
+                  disabled={disabled}
                   style={{ marginTop: "16px" }}
                 >
                   Make Purchase

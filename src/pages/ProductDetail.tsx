@@ -15,6 +15,7 @@ import type { TabsProps } from 'antd';
 import ReviewOrder from "../components/RewiewOrder";
 import ProductDescription from "../components/ProductDescription";
 import SizeTable from "../components/SizeTable";
+
 const { Title, Text, Paragraph } = Typography;
 
 const ProductDetail: React.FC = () => {
@@ -43,14 +44,13 @@ const ProductDetail: React.FC = () => {
       productDetail.data.category = category;
       setProduct(productDetail.data);
       if (productDetail.data.productReviews && productDetail.data.productReviews.length > 0) {
-        var rates = 0;
+        let rates = 0;
         productDetail.data.productReviews.forEach((review) => {
           rates += review.star;
         });
         setProductRates(rates / productDetail.data.productReviews.length);
       }
-     
-      
+
       if (productDetail.data.productImages && productDetail.data.productImages.length > 0) {
         setSelectedImage(productDetail.data.productImages[0].imagePath);
       }
@@ -87,8 +87,6 @@ const ProductDetail: React.FC = () => {
     addBasketMutation.mutate(basket);
   };
 
-
-
   const items: TabsProps['items'] = [
     {
       key: '1',
@@ -108,8 +106,8 @@ const ProductDetail: React.FC = () => {
   ];
 
   return (
-    <div style={{ padding: '20px', maxWidth: '1200px', margin: 'auto' }}>
-      <Row gutter={[16, 32]}>
+    <div style={{ padding: '20px', maxWidth: '100%', margin: 'auto' }}>
+      <Row gutter={[16, 32]} justify="center">
         <Col xs={24} md={12}>
           <div style={{ textAlign: 'center' }}>
             <Image
@@ -149,34 +147,32 @@ const ProductDetail: React.FC = () => {
 
         <Col xs={24} md={12}>
           <div style={{ padding: '20px', minHeight: '300px' }}>
-            <Title level={2}>{product?.productName}</Title>
-            <Rate  value={productRates} disabled allowHalf />
-            <Text type="secondary">Category: {product?.category?.name}</Text>
+            <Title level={3} style={{ fontSize: '1.5rem' }}>{product?.productName}</Title>
+            <Rate value={productRates} disabled allowHalf />
             <Divider />
-            <Title level={3} style={{ color: '#ff4d4f' }}>{product?.unitPrice} ₺</Title>
-            <Paragraph>{product?.description}</Paragraph>
+            <Title level={4} style={{ color: '#ff4d4f', fontSize: '1.3rem' }}>{product?.unitPrice} ₺</Title>
+            <Paragraph style={{ fontSize: '1rem' }}>{product?.description}</Paragraph>
             <Button
               type="primary"
               icon={<ShoppingCartOutlined />}
               size="large"
+              disabled={product?.unitsInStock ==0}
               onClick={addBasket}
               style={{ marginTop: '20px', width: '100%' }}
             >
-              Add to Cart
+             {product?.unitsInStock ==0? "Out Of Stock":"Add to Cart"}
             </Button>
           </div>
         </Col>
-      </Row>
+        </Row>
 
-      <Row>
+      <Row gutter={[16, 32]} justify="center">
         <Col span={24}>
           <Card style={{ minHeight: '200px', overflow: 'auto' }}>
-            <Tabs defaultActiveKey="1" items={items}  />
+            <Tabs defaultActiveKey="1" items={items} />
           </Card>
         </Col>
       </Row>
-
-    
     </div>
   );
 };

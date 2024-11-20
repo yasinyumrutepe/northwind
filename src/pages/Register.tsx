@@ -1,7 +1,8 @@
 import React from 'react';
 import { Form, Input, Button, Checkbox, Card } from 'antd';
+import { Link } from 'react-router-dom'; 
 import { useMutation } from '@tanstack/react-query';
-import { fetchRegister } from '../services/AuthService'; // Kayıt servisini burada kullanacaksınız
+import { fetchRegister } from '../services/AuthService';
 import { RegisterRequest } from '../types/Auth';
 import { errorNotification, successNotification } from '../config/notification';
 
@@ -9,11 +10,18 @@ const Register: React.FC = () => {
 
     const registerMutation = useMutation({
       mutationFn: fetchRegister,
-      onSuccess: () => {
-        successNotification('Kayıt işlemi başarılı!', 'Başarıyla kayıt oldunuz.');
+      onSuccess: (newUser) => {
+        console.log("Login Data", newUser);
+        if (newUser.status === 200) {
+          successNotification("Register Successful!", "You have logged in successfully.");
+          localStorage.setItem("authToken", newUser.token);
+          window.location.href = "/";
+        } else {
+          errorNotification("Register Failed!", "Email is already exist");
+        }
       },
       onError: () => {
-        errorNotification('Kayıt işlemi başarısız!', 'Bir hata oluştu.');
+        errorNotification('Registration Failed!', 'An error occurred.');
       },
     });
 
@@ -22,9 +30,9 @@ const Register: React.FC = () => {
         firstName: values.firstName,
         lastName: values.lastName,
         email: values.email,
-        password: values.password
+        password: values.password,
+        confirmPassword :values.confirmPassword
       };
-
       registerMutation.mutate(registerRequest);
     };
 
@@ -33,8 +41,24 @@ const Register: React.FC = () => {
     };
 
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#f0f2f5' }}>
-        <Card title="Kayıt Ol" style={{ width: 300 }}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        backgroundColor: '#f0f2f5',
+        padding: '1rem'
+      }}>
+        <Card 
+          title="Register" 
+          style={{ 
+            width: '100%', 
+            maxWidth: '400px', 
+            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', 
+            borderRadius: '8px',
+            padding: '20px' 
+          }}
+        >
           <Form
             name="registerForm"
             initialValues={{ remember: true }}
@@ -43,66 +67,70 @@ const Register: React.FC = () => {
             layout="vertical"
           >
             <Form.Item
-              label="Ad"
+              label="First Name"
               name="firstName"
-              rules={[{ required: true, message: 'Lütfen adınızı girin!' }]}
+              rules={[{ required: true, message: 'Please enter your first name!' }]}
             >
-              <Input placeholder="Ad" />
+              <Input placeholder="First Name" />
             </Form.Item>
 
             <Form.Item
-              label="Soyad"
+              label="Last Name"
               name="lastName"
-              rules={[{ required: true, message: 'Lütfen soyadınızı girin!' }]}
+              rules={[{ required: true, message: 'Please enter your last name!' }]}
             >
-              <Input placeholder="Soyad" />
+              <Input placeholder="Last Name" />
             </Form.Item>
 
             <Form.Item
               label="Email"
               name="email"
-              rules={[{ required: true, message: 'Lütfen email adresinizi girin!' }, { type: 'email', message: 'Geçerli bir email adresi girin!' }]}
+              rules={[{ required: true, message: 'Please enter your email address!' }, { type: 'email', message: 'Please enter a valid email address!' }]}
             >
               <Input placeholder="Email" />
             </Form.Item>
 
             <Form.Item
-              label="Şifre"
+              label="Password"
               name="password"
-              rules={[{ required: true, message: 'Lütfen şifrenizi girin!' }]}
+              rules={[{ required: true, message: 'Please enter your password!' }]}
             >
-              <Input.Password placeholder="Şifre" />
+              <Input.Password placeholder="Password" />
             </Form.Item>
 
             <Form.Item
-              label="Şifreyi Tekrar Girin"
+              label="Confirm Password"
               name="confirmPassword"
               dependencies={['password']}
               rules={[
-                { required: true, message: 'Lütfen şifrenizi tekrar girin!' },
+                { required: true, message: 'Please confirm your password!' },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
                     if (!value || getFieldValue('password') === value) {
                       return Promise.resolve();
                     }
-                    return Promise.reject(new Error('Şifreler eşleşmiyor!'));
+                    return Promise.reject(new Error('Passwords do not match!'));
                   },
                 }),
               ]}
             >
-              <Input.Password placeholder="Şifreyi Tekrar Girin" />
+              <Input.Password placeholder="Confirm Password" />
             </Form.Item>
 
             <Form.Item name="remember" valuePropName="checked">
-              <Checkbox>Beni hatırla</Checkbox>
+              <Checkbox>Remember me</Checkbox>
             </Form.Item>
 
             <Form.Item>
               <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
-                Kayıt Ol
+                Register
               </Button>
             </Form.Item>
           </Form>
+          
+          <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+            Already have an account? <Link to="/login">Login here</Link>
+          </div>
         </Card>
       </div>
     );

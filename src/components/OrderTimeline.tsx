@@ -36,14 +36,13 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ orderStatuses }) => {
 
   return (
     <Row justify="space-between" align="middle" gutter={32}> 
-      {orderStatuses.map((status, index) => (
-        <Col key={status.statusID}>
+     
+        <Col >
           <Row justify="center" align="middle" style={{ flexDirection: 'column' }}>
-            <span>{status.status.statusName}</span>
-            {getStatusIcon(status.statusID, orderStatuses[orderStatuses.length - 1].statusID)}
+            <span>{orderStatuses[orderStatuses.length - 1].status.statusName}</span>
+            {getStatusIcon(orderStatuses[orderStatuses.length - 1].status.statusID, orderStatuses[orderStatuses.length - 1].statusID)}
           </Row>
         </Col>
-      ))}
     </Row>
   );
 };

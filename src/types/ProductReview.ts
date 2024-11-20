@@ -6,7 +6,7 @@ export type ProductReviewRequest = {
     productId: number;
     review: string;
     star: number;
-    orderDetailID: number;
+    orderID: number;
   };
   
   export type ProductReview = {

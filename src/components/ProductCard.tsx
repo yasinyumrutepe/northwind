@@ -17,7 +17,7 @@ import { BasketRequest, Product } from "../types/Product";
 import { useMutation } from "@tanstack/react-query";
 import uuid from "react-uuid";
 import { addBasketService } from "../services/BasketService";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   addFavoriteProduct,
   deleteFavoriteProduct,
@@ -38,15 +38,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, imgPath }) => {
     product.productFavorites?.length !== 0
   );
   const [review, setReview] = React.useState<number>(0);
+
   useEffect(() => {
     if (product.productReviews?.length !== 0) {
-      const lenght = product.productReviews?.length ?? 0;
-      var rev = 0;
-        product.productReviews?.map((review) => {
+      const length = product.productReviews?.length ?? 0;
+      let rev = 0;
+      product.productReviews?.forEach((review) => {
         rev += review.star;
-        return review.star;
       });
-      setReview(rev / lenght);
+      setReview(rev / length);
     } else {
       setReview(0);
     }
@@ -86,7 +86,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, imgPath }) => {
       successNotification("Success", "Added to cart");
     },
     onError: () => {
-     errorNotification("Error", "An error occurred while adding to cart");
+      errorNotification("Error", "An error occurred while adding to cart");
     },
   });
 
@@ -110,6 +110,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, imgPath }) => {
     };
     addBasketMutation.mutate(basket);
   };
+
   const toggleFavorite = () => {
     if (!localStorage.getItem("authToken")) {
       window.location.href = "/login";
@@ -118,79 +119,106 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, imgPath }) => {
     if (isFavorited) {
       removeFavoriteMutation.mutate(product.productID);
     } else {
-      
       addFavoriteMutation.mutate(product.productID);
     }
   };
+
   const goToProductDetail = () => {
     navigate(`/product/${product.productID}`);
   };
 
   return (
-    
-
-
-      <Card
-        style={{ margin: "10px" }}
-        cover={
-          <img
-            src={product.productImages?.[0]?.imagePath ?? imgPath}
-            className=""
-            alt="..."
-            onClick={goToProductDetail}
-          />
-        }
-      >
-        <Title
-          level={5}
+    <Card
+      style={{
+        margin: "10px",
+        width: "100%",
+        maxWidth: "300px", // Masaüstünde 300px genişlik ile sınırlı
+      }}
+      className="product-card" // className ekleyerek stil uygulama
+      cover={
+        <img
+          src={product.productImages?.[0]?.imagePath ?? imgPath}
+          alt="Product"
+          className="product-image"
           onClick={goToProductDetail}
-          style={{
-            maxHeight: "60px",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-            cursor: "pointer",
-          }}
+        />
+      }
+    >
+      <Title
+        level={5}
+        onClick={goToProductDetail}
+        style={{
+          maxHeight: "60px",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+          cursor: "pointer",
+        }}
+      >
+        {product.productName}
+      </Title>
+      <div style={{ marginBottom: "15px" }}>
+        <Row>
+          <Col span={24}>
+            <Rate disabled value={review} />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <Text strong> {product.unitPrice} ₺</Text>
+          </Col>
+        </Row>
+      </div>
+      <Button.Group style={{ width: "100%" }}>
+        <Button
+          type="primary"
+          style={{ width: "100%" }}
+          onClick={addBasket}
+          disabled={product.unitsInStock === 0}
         >
-          {product.productName}
-        </Title>
-        <div style={{ marginBottom: "15px" }}>
-          <Row>
-            <Col span={24}>
-              <Rate disabled value={review} />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={12}>
-              <Text strong> {product.unitPrice} ₺</Text>
-            </Col>
-          </Row>
-        </div>
-        <Button.Group style={{ width: "100%" }}>
-          <Button
-            type="primary"
-            style={{ width: "100%" }}
-            onClick={addBasket}
-            disabled={product.unitsInStock === 0}
-          >
-            <ShoppingCartOutlined />
-          </Button>
-          <Button
-            style={{ width: "100%" }}
-            color="default"
-            onClick={toggleFavorite}
-            icon={
-              isFavorited ? (
-                <HeartFilled style={{ color: "#ff4757" }} />
-              ) : (
-                <HeartOutlined style={{ color: "#ff4757" }} />
-              )
-            }
-          />
-        </Button.Group>
-      </Card>
-   
+          <ShoppingCartOutlined />
+        </Button>
+        <Button
+          style={{ width: "100%" }}
+          onClick={toggleFavorite}
+          icon={
+            isFavorited ? (
+              <HeartFilled style={{ color: "#ff4757" }} />
+            ) : (
+              <HeartOutlined style={{ color: "#ff4757" }} />
+            )
+          }
+        />
+      </Button.Group>
+    </Card>
   );
 };
 
 export default ProductCard;
+
+const styles = `
+  .product-card {
+    transition: all 0.3s ease;
+  }
+  @media (max-width: 768px) {
+    .product-card {
+      max-width: 100%; /* Mobilde genişliği %100 yap */
+      margin: 5px auto; /* Mobilde ortala */
+    }
+    .product-image {
+      max-height: 300px; /* Görsel boyutunu mobilde küçült */
+      object-fit: contain; /* Görsel oranını koru */
+    }
+    .ant-card-body {
+      padding: 10px; /* Mobilde daha az boşluk */
+    }
+    .ant-typography {
+      font-size: 14px; /* Yazı boyutunu mobilde küçült */
+    }
+  }
+`;
+
+const styleSheet = document.createElement("style");
+styleSheet.type = "text/css";
+styleSheet.innerText = styles;
+document.head.appendChild(styleSheet);
