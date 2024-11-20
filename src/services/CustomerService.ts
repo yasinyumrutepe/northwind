@@ -23,8 +23,8 @@ export const createCustomer = async (customer:Object) => {
     return response.data;
 }
 
-export const updateCustomer = async (id:Number, customer:Object) => {
-    const response = await api.put(`/Customer/${id}`, customer);
+export const updateCustomer = async (updateCustomer:any) => {
+    const response = await api.put(`/Customer`, updateCustomer);
     return response.data;
 }
 

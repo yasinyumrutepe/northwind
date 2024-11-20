@@ -155,84 +155,99 @@ const FilterComponent: React.FC<FilterProps> = ({
 
   return (
     <Card title="Filters">
-      <Card title="Categories"  style={{ marginBottom: '16px', maxHeight: '300px', overflowY: 'auto' }}>
-  {categories
-    .filter((category) => category.parent_ID === null) // Main Categories
-    .map((mainCategory) => (
-      <div key={mainCategory.categoryID} style={{ marginBottom: '8px' }}>
-        {/* Main Category */}
-        <Col>
-          <Checkbox
-            onChange={() => handlerCategoryChange(mainCategory.categoryID)}
-            checked={
-              tempFilters.productFilterKeys.categories?.includes(
-                mainCategory.categoryID
-              ) || false
-            }
-          >
-            {mainCategory.name}
-          </Checkbox>
-        </Col>
+      <Card
+        title="Categories"
+        style={{ marginBottom: "12px", maxHeight: "14rem", maxWidth:'20rem', overflowY: "auto", overflowX: "hidden" }}
+      >
+       
+        {categories
+          .filter((category) => category.parent_ID === null)
+          .map((mainCategory) => (
+            <div key={mainCategory.categoryID} style={{ marginBottom: "8px" }}>
+              <Col>
+                <Checkbox
+                  onChange={() =>
+                    handlerCategoryChange(mainCategory.categoryID)
+                  }
+                  checked={
+                    tempFilters.productFilterKeys.categories?.includes(
+                      mainCategory.categoryID
+                    ) || false
+                  }
+                  style={{ fontSize: "0.8rem" }}
+                >
+                  {mainCategory.name}
+                </Checkbox>
+              </Col>
 
-        {/* Subcategories */}
-        <div style={{ marginLeft: '20px', marginTop: '8px' }}>
-          {categories
-            .filter((subCategory) => subCategory.parent_ID === mainCategory.categoryID)
-            .map((subCategory) => (
-              <div key={subCategory.categoryID}>
-                <Col>
-                  <Checkbox
-                    onChange={() => handlerCategoryChange(subCategory.categoryID)}
-                    checked={
-                      tempFilters.productFilterKeys.categories?.includes(
-                        subCategory.categoryID
-                      ) || false
-                    }
-                  >
-                    {subCategory.name}
-                  </Checkbox>
-                </Col>
-
-                {/* Sub-Subcategories */}
-                <div style={{ marginLeft: '20px', marginTop: '8px' }}>
-                  {categories
-                    .filter(
-                      (subSubCategory) =>
-                        subSubCategory.parent_ID === subCategory.categoryID
-                    )
-                    .map((subSubCategory) => (
-                      <Col key={subSubCategory.categoryID}>
+              <div style={{ marginLeft: "20px", marginTop: "8px" }}>
+                {categories
+                  .filter(
+                    (subCategory) =>
+                      subCategory.parent_ID === mainCategory.categoryID
+                  )
+                  .map((subCategory) => (
+                    <div key={subCategory.categoryID}>
+                      <Col>
                         <Checkbox
                           onChange={() =>
-                            handlerCategoryChange(subSubCategory.categoryID)
+                            handlerCategoryChange(subCategory.categoryID)
                           }
                           checked={
                             tempFilters.productFilterKeys.categories?.includes(
-                              subSubCategory.categoryID
+                              subCategory.categoryID
                             ) || false
                           }
+                          style={{ fontSize: "0.8rem" }}
                         >
-                          {subSubCategory.name}
+                          {subCategory.name}
                         </Checkbox>
                       </Col>
-                    ))}
-                </div>
+
+                      {/* Sub-Subcategories */}
+                      <div style={{ marginLeft: "20px", marginTop: "8px" }}>
+                        {categories
+                          .filter(
+                            (subSubCategory) =>
+                              subSubCategory.parent_ID ===
+                              subCategory.categoryID
+                          )
+                          .map((subSubCategory) => (
+                            <Col key={subSubCategory.categoryID}>
+                              <Checkbox
+                                onChange={() =>
+                                  handlerCategoryChange(
+                                    subSubCategory.categoryID
+                                  )
+                                }
+                                checked={
+                                  tempFilters.productFilterKeys.categories?.includes(
+                                    subSubCategory.categoryID
+                                  ) || false
+                                }
+                                style={{ fontSize: "0.8rem" }}
+                              >
+                                {subSubCategory.name}
+                              </Checkbox>
+                            </Col>
+                          ))}
+                      </div>
+                    </div>
+                  ))}
               </div>
-            ))}
-        </div>
-      </div>
-    ))}
-</Card>
-      <Card title="Price" style={{ marginBottom: "16px" }}>
+            </div>
+          ))}
+      </Card>
+      <Card title="Price" style={{ marginBottom: "12px" }}>
         <Row>
-          <Col span={12} style={{ padding: "10px" }}>
+          <Col span={24} style={{ padding: "5px" }}>
             <Input
               onChange={(value) => handleChangeMinPrice(value)}
               type="number"
               placeholder="Min"
             />
           </Col>
-          <Col span={12} style={{ padding: "10px" }}>
+          <Col span={24} style={{ padding: "5px" }}>
             <Input
               onChange={(value) => handleChangeMaxPrice(value)}
               type="number"
@@ -241,7 +256,7 @@ const FilterComponent: React.FC<FilterProps> = ({
           </Col>
         </Row>
       </Card>
-      <Card title="Color" style={{ marginBottom: "16px" }}>
+      <Card title="Color" style={{ marginBottom: "12px" }}>
         <Col>
           {colors.map((color) => (
             <Checkbox
@@ -275,6 +290,7 @@ const FilterComponent: React.FC<FilterProps> = ({
                 false
               }
               key={size.variantID}
+              style={{ fontSize: "0.8rem" }}
             >
               {size.variantName}
             </Checkbox>
@@ -284,19 +300,19 @@ const FilterComponent: React.FC<FilterProps> = ({
       <Card title="Rating" style={{ marginBottom: "16px" }}>
         <Col>
           <Checkbox onChange={() => handleRatingChange(5)}>
-            <Rate value={5} disabled />
+            <Rate value={5} disabled style={{ fontSize: "16px" }} />
           </Checkbox>
           <Checkbox onChange={() => handleRatingChange(4)}>
-            <Rate value={4} disabled />
+            <Rate value={4} disabled style={{ fontSize: "16px" }} />
           </Checkbox>
           <Checkbox onChange={() => handleRatingChange(3)}>
-            <Rate value={3} disabled />
+            <Rate value={3} disabled style={{ fontSize: "16px" }} />
           </Checkbox>
           <Checkbox onChange={() => handleRatingChange(2)}>
-            <Rate value={2} disabled />
+            <Rate value={2} disabled style={{ fontSize: "16px" }} />
           </Checkbox>
           <Checkbox onChange={() => handleRatingChange(1)}>
-            <Rate value={1} disabled />
+            <Rate value={1} disabled style={{ fontSize: "16px" }} />
           </Checkbox>
         </Col>
       </Card>

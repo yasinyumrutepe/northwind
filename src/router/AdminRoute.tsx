@@ -11,7 +11,6 @@ const AdminRoute=()=>{
     if (!authToken) {
         window.location.href = '/login';
     }
-    
     const goWebSite = () => {
         window.location.href = '/';
     }

@@ -1,5 +1,6 @@
 import React from "react";
 import { Form, Input, Button, Checkbox, Card } from "antd";
+import { Link } from "react-router-dom"; // Register sayfasına yönlendirme için eklendi
 import { useMutation } from "@tanstack/react-query";
 import { fetchLogin } from "../services/AuthService";
 import { LoginRequest } from "../types/Auth";
@@ -11,18 +12,15 @@ const Login: React.FC = () => {
     onSuccess: (data) => {
       console.log("Login Data", data);
       if (data.status === 200) {
-        successNotification(
-          "Giriş işlemi başarılı!",
-          "Başarıyla giriş yaptınız."
-        );
+        successNotification("Login Successful!", "You have logged in successfully.");
         localStorage.setItem("authToken", data.token);
         window.location.href = "/";
       } else {
-        errorNotification("Giriş işlemi başarısız!", "Email yada şifre hatalı");
+        errorNotification("Login Failed!", "Email or password is incorrect.");
       }
     },
     onError: () => {
-      errorNotification("Giriş işlemi başarısız!", "Email yada şifre hatalı");
+      errorNotification("Login Failed!", "Email or password is incorrect.");
     },
   });
 
@@ -44,11 +42,21 @@ const Login: React.FC = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
+        minHeight: "100vh",
         backgroundColor: "#f0f2f5",
+        padding: "1rem"
       }}
     >
-      <Card title="Giriş Yap" style={{ width: 300 }}>
+      <Card 
+        title="Login" 
+        style={{ 
+          width: "100%", 
+          maxWidth: "400px", 
+          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)", 
+          borderRadius: "8px",
+          padding: "20px" 
+        }}
+      >
         <Form
           name="loginForm"
           initialValues={{ remember: true }}
@@ -60,31 +68,35 @@ const Login: React.FC = () => {
             label="Email"
             name="email"
             rules={[
-              { required: true, message: "Lütfen email adresinizi girin!" },
-              { message: "Geçerli bir email adresi girin!" },
+              { required: true, message: "Please enter your email address!" },
+              { type: "email", message: "Please enter a valid email address!" },
             ]}
           >
             <Input placeholder="Email" type="text" />
           </Form.Item>
 
           <Form.Item
-            label="Şifre"
+            label="Password"
             name="password"
-            rules={[{ required: true, message: "Lütfen şifrenizi girin!" }]}
+            rules={[{ required: true, message: "Please enter your password!" }]}
           >
-            <Input.Password placeholder="Şifre" />
+            <Input.Password placeholder="Password" />
           </Form.Item>
 
           <Form.Item name="remember" valuePropName="checked">
-            <Checkbox>Beni hatırla</Checkbox>
+            <Checkbox>Remember me</Checkbox>
           </Form.Item>
 
           <Form.Item>
             <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
-              Giriş Yap
+              Login
             </Button>
           </Form.Item>
         </Form>
+
+        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+          Don't have an account? <Link to="/register">Register here</Link>
+        </div>
       </Card>
     </div>
   );

@@ -14,3 +14,11 @@ export type Customer = {
         email: string;
     }
 };
+
+
+export type Personel={
+    customerID:string;
+    name:string;
+    phone:string;
+    email:string;
+}

@@ -21,7 +21,6 @@ export const useFetchProducts = (filters?:FilterType)=>{
 }
 
 
-
 export const useFetchProduct = (id:number)=>{
     const productDetailQuery = useQuery({
       queryKey: ['products'],
@@ -33,7 +32,7 @@ export const useFetchProduct = (id:number)=>{
 }
 
 
-export const useFetchProductsByCategory = (request:GetProductsByCategoryRequest)=>{
+export const useFetchProductsByCategory = (request:FilterType)=>{
   const productsByCategory = useQuery({
     queryKey: ['products',request],
     queryFn: () => fetchProductsByCategory(request),
@@ -49,7 +48,7 @@ export const useFetchProduct2 = (id:number)=>{
     return productDetailQuery
 }
 
-export const useFetchProductsByCategory2 = (request:GetProductsByCategoryRequest)=>{
+export const useFetchProductsByCategory2 = (request:FilterType)=>{
     const productsByCategory = useQueryFunc(['products',request],()=>fetchProductsByCategory(request))
     return productsByCategory
 }

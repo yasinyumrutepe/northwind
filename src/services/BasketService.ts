@@ -9,8 +9,8 @@ export const fetchAllBaskets = async () => {
 }
 
 
-export const fetchBasket = async (basketId:string) => {
-    const response = await api.get('/Basket/'+basketId);
+export const fetchBasket = async () => {
+    const response = await api.get('/Basket');
     return response.data;
 }
 
@@ -21,7 +21,7 @@ export const addBasketService = async (basket:BasketRequest) => {
 
 export const deleteBasket = async (productID:number) => {
     console.log(productID);
-    const response = await api.delete<BasketResponse>('/Basket/'+productID);
+    const response = await api.delete<BasketResponse>('/Basket?productId='+productID);
     return response.data;
 }
 
@@ -32,6 +32,6 @@ export const updateQuantity = async (updateQuantityData:UpdateQuantityType) => {
 }
 
 export const addCampaign = async (campaignName:string) => {
-    const response = await api.get(`/Basket/campaign/${campaignName}`);
+    const response = await api.get(`/Basket/campaign/?campaignName=${campaignName}`);
     return response.data;
 }
